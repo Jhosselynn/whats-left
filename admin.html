@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — What's Left</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4efe5;--bg2:#ede7d8;--bg3:#e4dcc8;--card:#fffcf5;
+  --text:#1c1408;--dim:rgba(28,20,8,.55);--fade:rgba(28,20,8,.28);
+  --leaf:#4a8820;--leaf-t:rgba(74,136,32,.1);--leaf-b:rgba(74,136,32,.28);
+  --sun:#9a7508;--clay:#8f3418;--red:#c0392b;--red-t:rgba(192,57,43,.09);
+  --border:rgba(28,20,8,.1);--border-h:rgba(74,136,32,.4);
+  --shadow:0 8px 32px rgba(0,0,0,.09);--sidebar:#1c1408;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
+
+/* LOGIN */
+#login{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
+.lbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:3rem 2.5rem;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.14);text-align:center}
+.lbox .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--leaf);letter-spacing:.06em;text-transform:uppercase}
+.lbox .sub{font-size:.65rem;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;margin:.3rem 0 2.2rem}
+.lbox .field{text-align:left;margin-bottom:1.2rem}
+.lbox label{display:block;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:.4rem}
+.lbox input[type=password]{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:.85rem 1rem;font-family:'DM Sans',sans-serif;font-size:1.1rem;letter-spacing:.15em;border-radius:6px;outline:none;transition:border-color .2s}
+.lbox input[type=password]:focus{border-color:var(--leaf)}
+.lerr{font-size:.8rem;color:var(--red);margin-bottom:.8rem;min-height:1.2rem;text-align:center}
+.notion-note{margin-top:1.2rem;padding:.8rem;background:var(--leaf-t);border-radius:6px;font-size:.75rem;color:var(--leaf);line-height:1.5;text-align:left;border:1px solid var(--leaf-b)}
+
+/* BUTTONS */
+.btn{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;border:none;border-radius:6px;padding:.8rem 1.6rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap}
+.btn-p{background:var(--leaf);color:#fff}
+.btn-p:hover{box-shadow:0 6px 20px var(--leaf-b);transform:translateY(-1px)}
+.btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-g{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-g:hover{border-color:var(--leaf);color:var(--leaf)}
+.btn-r{background:transparent;color:var(--red);border:1px solid rgba(192,57,43,.2)}
+.btn-r:hover{background:var(--red-t)}
+.btn-full{width:100%;justify-content:center}
+.btn-sm{padding:.5rem 1rem;font-size:.72rem}
+.btn-xs{padding:.35rem .7rem;font-size:.68rem;border-radius:4px}
+
+/* APP */
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:var(--sidebar);display:flex;flex-direction:column;z-index:200;transition:transform .3s}
+.sb-logo{padding:1.6rem 1.4rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-logo .name{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:#78b445;letter-spacing:.1em;text-transform:uppercase}
+.sb-logo .panel{font-size:.58rem;letter-spacing:.16em;color:rgba(255,255,255,.3);text-transform:uppercase;margin-top:2px}
+.sb-nav{flex:1;padding:.8rem 0;overflow-y:auto}
+.sb-section{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:.6rem 1.4rem .2rem;margin-top:.4rem}
+.sbi{display:flex;align-items:center;gap:.75rem;padding:.72rem 1.4rem;cursor:pointer;transition:all .2s;font-size:.84rem;color:rgba(255,255,255,.5);border-left:2px solid transparent;user-select:none}
+.sbi:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.04)}
+.sbi.on{color:#78b445;background:rgba(120,180,69,.1);border-left-color:#78b445}
+.sbi .ic{font-size:1rem;width:18px;text-align:center;flex-shrink:0}
+.sbi .cnt{margin-left:auto;background:rgba(120,180,69,.18);color:#78b445;font-size:.62rem;font-weight:700;padding:.12rem .42rem;border-radius:100px;font-family:'Syne',sans-serif}
+.sb-foot{padding:1rem 1.4rem;border-top:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:.5rem}
+.sb-foot button{background:none;border:none;color:rgba(255,255,255,.3);font-size:.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:.4rem;transition:color .2s;text-align:left}
+.sb-foot button:hover{color:rgba(255,255,255,.7)}
+.notion-status{font-size:.65rem;color:rgba(255,255,255,.25);display:flex;align-items:center;gap:.4rem}
+.notion-status.ok{color:rgba(120,180,69,.7)}
+.notion-status.err{color:rgba(192,57,43,.7)}
+
+/* MAIN */
+.main{margin-left:220px;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar h1{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--text)}
+.topbar-right{display:flex;align-items:center;gap:.8rem}
+.content{padding:2rem;flex:1}
+
+/* VIEWS */
+.view{display:none}
+.view.on{display:block}
+
+/* DASHBOARD */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2rem}
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;position:relative;overflow:hidden}
+.dash-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--leaf)}
+.dc-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;color:var(--text);line-height:1;margin-bottom:.3rem}
+.dc-lbl{font-size:.78rem;color:var(--dim)}
+.dc-ic{position:absolute;right:1.2rem;top:1.2rem;font-size:1.8rem;opacity:.18}
+.recent-list{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.rl-head{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.rl-head h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem}
+.rl-item{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;transition:background .2s}
+.rl-item:last-child{border-bottom:none}
+.rl-item:hover{background:var(--bg2)}
+.rl-emoji{font-size:1.4rem;flex-shrink:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border-radius:6px}
+.rl-info{flex:1;min-width:0}
+.rl-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--text);margin-bottom:.18rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rl-meta{font-size:.74rem;color:var(--dim)}
+
+/* FORM */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2rem;max-width:820px;margin-bottom:1.5rem}
+.form-card h2{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.fg{margin-bottom:1.2rem}
+.fg label{display:block;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:.4rem}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.78rem 1rem;font-family:'DM Sans',sans-serif;font-size:.92rem;border-radius:6px;outline:none;transition:border-color .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--leaf)}
+.fg textarea{resize:vertical;min-height:90px;line-height:1.6}
+.fg .hint{font-size:.72rem;color:var(--fade);margin-top:.35rem;line-height:1.5}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.fgrid .fg{margin-bottom:0}
+.span2{grid-column:1/-1}
+
+/* GEO */
+.geo-row{display:flex;gap:.6rem;align-items:flex-end}
+.geo-row input{flex:1}
+.geo-result{margin-top:.5rem;padding:.6rem .9rem;border-radius:6px;font-size:.78rem;display:none}
+.geo-result.ok{background:var(--leaf-t);border:1px solid var(--leaf-b);color:var(--leaf);display:block}
+.geo-result.err{background:var(--red-t);border:1px solid rgba(192,57,43,.2);color:var(--red);display:block}
+
+/* CHIPS */
+.chips-wrap{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem}
+.chip{padding:.3rem .8rem;border:1px solid var(--border);border-radius:100px;font-size:.76rem;cursor:pointer;transition:all .2s;color:var(--dim);user-select:none}
+.chip:hover{border-color:var(--leaf);color:var(--leaf)}
+.chip.on{background:var(--leaf);border-color:var(--leaf);color:#fff}
+
+/* EMOJI PICKER */
+.emoji-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:.3rem;margin-top:.5rem}
+.emoji-opt{font-size:1.4rem;padding:.3rem;border-radius:4px;cursor:pointer;text-align:center;transition:background .15s;border:2px solid transparent}
+.emoji-opt:hover{background:var(--bg2)}
+.emoji-opt.on{border-color:var(--leaf);background:var(--leaf-t)}
+
+/* COLOR PICKER */
+.color-grid{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+.color-opt{width:32px;height:32px;border-radius:6px;cursor:pointer;border:3px solid transparent;transition:all .15s}
+.color-opt.on{border-color:var(--text);transform:scale(1.15)}
+
+/* BADGE */
+.badge{display:inline-block;padding:.22rem .65rem;border-radius:100px;font-size:.68rem;font-weight:700;font-family:'Syne',sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.b-pub{background:rgba(74,136,32,.15);color:var(--leaf)}
+.b-draft{background:rgba(154,117,8,.12);color:var(--sun)}
+.b-arch{background:rgba(28,20,8,.08);color:var(--dim)}
+
+/* FORM ACTIONS */
+.form-actions{display:flex;gap:.8rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.fmsg{padding:.75rem 1rem;border-radius:6px;font-size:.84rem;margin-top:.8rem;display:none}
+.fmsg.ok{background:var(--leaf-t);color:var(--leaf);border:1px solid var(--leaf-b);display:block}
+.fmsg.err{background:var(--red-t);color:var(--red);border:1px solid rgba(192,57,43,.2);display:block}
+
+/* TABLE */
+.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.tbl-toolbar{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.tbl-toolbar input{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.55rem .9rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;width:220px;transition:border-color .2s}
+.tbl-toolbar input:focus{border-color:var(--leaf)}
+.tbl-toolbar select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.55rem .8rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none;cursor:pointer}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:.85rem 1rem;font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--border);background:var(--bg2)}
+td{padding:.9rem 1rem;border-bottom:1px solid var(--border);font-size:.85rem;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg2)}
+.td-name{display:flex;align-items:center;gap:.7rem}
+.td-ic{width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;overflow:hidden}
+.td-actions{display:flex;gap:.4rem}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--dim)}
+.empty-state .big{font-size:3rem;margin-bottom:.8rem}
+
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;padding:3rem;gap:.8rem;color:var(--dim);font-size:.88rem}
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--leaf);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* NOTION CONNECT */
+.notion-connect-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2rem;max-width:600px;margin-bottom:1.5rem}
+.notion-connect-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:1rem}
+
+/* MOBILE */
+.ham{display:none;background:none;border:none;cursor:pointer;padding:.4rem;flex-direction:column;gap:5px}
+.ham span{display:block;width:20px;height:1.5px;background:var(--text);border-radius:2px}
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:199}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .mob-overlay.open{display:block}
+  .main{margin-left:0}
+  .topbar{padding:1rem}
+  .content{padding:1rem}
+  .ham{display:flex}
+  .fgrid{grid-template-columns:1fr}
+  .span2{grid-column:1}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="lbox">
+    <div class="logo">What's Left</div>
+    <div class="sub">Panel de administración</div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="pw-input" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div class="lerr" id="lerr"></div>
+    <button class="btn btn-p btn-full" onclick="tryLogin()">Entrar →</button>
+    <div class="notion-note">
+      💡 Este panel guarda todo en <strong>Notion</strong>.<br>
+      Asegúrate de haber configurado la variable <code>NOTION_KEY</code> en Netlify.
+    </div>
+  </div>
+</div>
+
+<div class="mob-overlay" id="mob-overlay" onclick="closeSidebar()"></div>
+
+<!-- APP -->
+<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="name">What's Left</div>
+      <div class="panel">Admin · Notion</div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <div class="sbi on" data-view="dash"><span class="ic">📊</span> Dashboard</div>
+      <div class="sbi" data-view="nueva"><span class="ic">➕</span> Nueva iniciativa</div>
+      <div class="sbi" data-view="lista"><span class="ic">📋</span> Iniciativas <span class="cnt" id="cnt-total">—</span></div>
+
+      <div class="sb-section">Contenido</div>
+      <div class="sbi" data-view="huellas"><span class="ic">🎙️</span> Huellas / Marks</div>
+      <div class="sbi" data-view="eventos"><span class="ic">📅</span> Eventos</div>
+
+      <div class="sb-section">Sitio</div>
+      <div class="sbi" data-view="textos"><span class="ic">✏️</span> Textos del sitio</div>
+      <div class="sbi" data-view="categorias"><span class="ic">🏷️</span> Categorías</div>
+      <div class="sbi" data-view="redes"><span class="ic">📱</span> Redes sociales</div>
+      <div class="sbi" data-view="config"><span class="ic">⚙️</span> Configuración</div>
+    </nav>
+    <div class="sb-foot">
+      <div class="notion-status" id="notion-status">⬤ Conectando a Notion…</div>
+      <button onclick="logout()">← Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button class="ham" id="ham-btn"><span></span><span></span><span></span></button>
+        <h1 id="page-title">Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-p btn-sm" onclick="showView('nueva')">+ Nueva iniciativa</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="view on" id="v-dash">
+        <div class="dash-grid">
+          <div class="dash-card"><div class="dc-ic">🌍</div><div class="dc-num" id="d-total">—</div><div class="dc-lbl">Iniciativas totales</div></div>
+          <div class="dash-card"><div class="dc-ic">✅</div><div class="dc-num" id="d-pub">—</div><div class="dc-lbl">Publicadas</div></div>
+          <div class="dash-card"><div class="dc-ic">📝</div><div class="dc-num" id="d-draft">—</div><div class="dc-lbl">Borradores</div></div>
+          <div class="dash-card"><div class="dc-ic">📅</div><div class="dc-num" id="d-events">—</div><div class="dc-lbl">Eventos</div></div>
+        </div>
+        <div class="recent-list">
+          <div class="rl-head"><h3>Últimas iniciativas</h3><button class="btn btn-g btn-sm" onclick="showView('lista')">Ver todas</button></div>
+          <div id="recent-items"><div class="loading"><div class="spinner"></div> Cargando desde Notion…</div></div>
+        </div>
+      </div>
+
+      <!-- NUEVA / EDITAR INICIATIVA -->
+      <div class="view" id="v-nueva">
+        <div class="form-card">
+          <h2 id="form-title">➕ Nueva iniciativa</h2>
+          <div class="fgrid">
+            <div class="fg span2"><label>Nombre *</label><input type="text" id="f-name" placeholder="Ej: Arte con Llantas Bogotá"></div>
+            <div class="fg">
+              <label>Categoría</label>
+              <select id="f-cat-rel">
+                <option value="">Cargando categorías…</option>
+              </select>
+              <div class="hint">Gestiona las categorías en la sección 🏷️ Categorías.</div>
+            </div>
+            <div class="fg">
+              <label>Estado</label>
+              <select id="f-status">
+                <option value="Publicada">✅ Publicada</option>
+                <option value="Borrador">📝 Borrador</option>
+                <option value="Archivada">📦 Archivada</option>
+              </select>
+            </div>
+            <div class="fg span2"><label>Descripción *</label><textarea id="f-desc" placeholder="¿Qué hace esta iniciativa?"></textarea></div>
+            <div class="fg span2">
+              <label>Cómo preparar los materiales</label>
+              <textarea id="f-prep" placeholder="Ej: Las chanclas deben estar limpias. No se aceptan suelas completamente desgastadas…" style="min-height:110px"></textarea>
+              <div class="hint">Aparece en la ficha de la iniciativa para orientar a quienes quieren llevar materiales.</div>
+            </div>
+            <div class="fg span2">
+              <label>Materiales que reciben</label>
+              <div class="chips-wrap" id="mat-chips">
+                <span class="chip" data-v="Calzado" onclick="this.classList.toggle('on')">👟 Calzado</span>
+                <span class="chip" data-v="Electrónicos" onclick="this.classList.toggle('on')">📱 Electrónicos</span>
+                <span class="chip" data-v="Ropa" onclick="this.classList.toggle('on')">👗 Ropa</span>
+                <span class="chip" data-v="Plástico" onclick="this.classList.toggle('on')">♻️ Plástico</span>
+                <span class="chip" data-v="Papel" onclick="this.classList.toggle('on')">📄 Papel</span>
+                <span class="chip" data-v="Comida" onclick="this.classList.toggle('on')">🥗 Comida</span>
+                <span class="chip" data-v="Baterías" onclick="this.classList.toggle('on')">🔋 Baterías</span>
+                <span class="chip" data-v="Madera" onclick="this.classList.toggle('on')">🌳 Madera</span>
+                <span class="chip" data-v="Metal" onclick="this.classList.toggle('on')">🥫 Metal</span>
+                <span class="chip" data-v="Vidrio" onclick="this.classList.toggle('on')">🪟 Vidrio</span>
+                <span class="chip" data-v="Muebles" onclick="this.classList.toggle('on')">🛋️ Muebles</span>
+                <span class="chip" data-v="Libros" onclick="this.classList.toggle('on')">📚 Libros</span>
+                <span class="chip" data-v="Jabón" onclick="this.classList.toggle('on')">🧴 Jabón</span>
+                <span class="chip" data-v="Aceite" onclick="this.classList.toggle('on')">🛢️ Aceite</span>
+                <span class="chip" data-v="Orgánicos" onclick="this.classList.toggle('on')">🌿 Orgánicos</span>
+              </div>
+            </div>
+            <div class="fg"><label>Horario de recepción</label><input type="text" id="f-hours" placeholder="Lun–Vie 8am–5pm"></div>
+            <div class="fg"><label>País</label><input type="text" id="f-country" placeholder="Colombia"></div>
+            <div class="fg"><label>Ciudad</label><input type="text" id="f-city" placeholder="Bogotá"></div>
+            <div class="fg"><label>Email</label><input type="email" id="f-email" placeholder="hola@iniciativa.org"></div>
+            <div class="fg"><label>Teléfono / WhatsApp</label><input type="tel" id="f-phone" placeholder="+57 300 000 0000"></div>
+            <div class="fg"><label>Instagram</label><input type="url" id="f-instagram" placeholder="https://instagram.com/..."></div>
+            <div class="fg"><label>Sitio web</label><input type="url" id="f-web" placeholder="https://..."></div>
+            <div class="fg span2"><label>YouTube (video de presentación)</label><input type="url" id="f-youtube" placeholder="https://youtube.com/watch?v=..."></div>
+            <div class="fg span2">
+              <label>Dirección completa (para el mapa) *</label>
+              <div class="geo-row">
+                <input type="text" id="f-addr" placeholder="Calle 72 #10-07, Bogotá, Colombia">
+                <button class="btn btn-g btn-sm" onclick="geocode()" id="geo-btn" type="button">📍 Buscar</button>
+              </div>
+              <div class="geo-result" id="geo-result"></div>
+              <input type="hidden" id="f-lat">
+              <input type="hidden" id="f-lng">
+              <div class="hint">Escribe la dirección completa y haz clic en "Buscar" para obtener las coordenadas del mapa automáticamente.</div>
+            </div>
+            <div class="fg">
+              <label>Emoji / Ícono</label>
+              <div class="emoji-grid" id="emoji-grid"></div>
+              <input type="hidden" id="f-emoji" value="♻️">
+            </div>
+            <div class="fg">
+              <label>Color de tarjeta</label>
+              <div class="color-grid" id="color-grid"></div>
+              <input type="hidden" id="f-color" value="linear-gradient(135deg,#2d4a1e,#4a8820)">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-p" onclick="saveIniciativa('Publicada')">✅ Publicar iniciativa</button>
+            <button class="btn btn-g" onclick="saveIniciativa('Borrador')">📝 Guardar borrador</button>
+            <button class="btn btn-r" id="btn-delete" onclick="deleteItem()" style="display:none">🗑️ Eliminar</button>
+          </div>
+          <div class="fmsg" id="fmsg"></div>
+        </div>
+      </div>
+
+      <!-- LISTA DE INICIATIVAS -->
+      <div class="view" id="v-lista">
+        <div class="tbl-wrap">
+          <div class="tbl-toolbar">
+            <input type="text" id="search-q" placeholder="🔍 Buscar…" oninput="filterTable()">
+            <select id="filter-cat" onchange="filterTable()">
+              <option value="">Todas las categorías</option>
+              <option value="Arte / Upcycling">🎨 Arte</option>
+              <option value="Higiene">🧴 Higiene</option>
+              <option value="Tech">💻 Tech</option>
+              <option value="Comida">🥗 Comida</option>
+              <option value="Ropa">👗 Ropa</option>
+            </select>
+            <select id="filter-status" onchange="filterTable()">
+              <option value="">Todos los estados</option>
+              <option value="Publicada">✅ Publicadas</option>
+              <option value="Borrador">📝 Borradores</option>
+              <option value="Archivada">📦 Archivadas</option>
+            </select>
+            <button class="btn btn-g btn-sm" onclick="loadAll()">🔄 Actualizar</button>
+            <span id="tbl-count" style="margin-left:auto;font-size:.78rem;color:var(--dim)"></span>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr><th>Iniciativa</th><th>Categoría</th><th>Ciudad</th><th>Materiales</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <tbody id="tbl-body"><tr><td colspan="6"><div class="loading"><div class="spinner"></div> Cargando…</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- HUELLAS -->
+      <div class="view" id="v-huellas">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.8rem">
+          <p style="font-size:.88rem;color:var(--dim)">Entrevistas, reflexiones y experiencias · se muestran en la sección Huellas del sitio.</p>
+          <button class="btn btn-p btn-sm" onclick="openHuellaForm()">+ Nueva huella</button>
+        </div>
+        <div id="huella-form-wrap" style="display:none;margin-bottom:1.5rem">
+          <div class="form-card">
+            <h2 id="hf-title-h">Nueva huella</h2>
+            <div class="fgrid">
+              <div class="fg span2"><label>Título *</label><input type="text" id="hf-title" placeholder="Ej: 'Cada llanta es una historia'"></div>
+              <div class="fg">
+                <label>Tipo</label>
+                <select id="hf-type"><option value="Entrevista">🎙️ Entrevista</option><option value="Reflexión">✍️ Reflexión</option><option value="Experiencia">🌱 Experiencia</option><option value="Podcast">🎧 Podcast</option></select>
+              </div>
+              <div class="fg">
+                <label>Estado</label>
+                <select id="hf-status"><option value="Publicado">✅ Publicado</option><option value="Borrador">📝 Borrador</option></select>
+              </div>
+              <div class="fg">
+                <label>Categoría relacionada</label>
+                <select id="hf-cat"><option value="Arte">🎨 Arte</option><option value="Higiene">🧴 Higiene</option><option value="Tech">💻 Tech</option><option value="Comida">🥗 Comida</option><option value="Ropa">👗 Ropa</option></select>
+              </div>
+              <div class="fg"><label>Fecha</label><input type="date" id="hf-date"></div>
+              <div class="fg span2"><label>Descripción</label><textarea id="hf-desc" placeholder="Resumen del contenido…"></textarea></div>
+              <div class="fg span2"><label>Link (YouTube, Spotify, etc.)</label><input type="url" id="hf-link" placeholder="https://..."></div>
+              <div class="fg span2">
+                <label>URL de YouTube para embed</label>
+                <input type="url" id="hf-youtube" placeholder="https://youtube.com/watch?v=...">
+                <div class="hint">Si es un video de YouTube, pega la URL aquí y la portada aparecerá automáticamente en el sitio.</div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-p" onclick="saveHuella()">💾 Guardar</button>
+              <button class="btn btn-g" onclick="document.getElementById('huella-form-wrap').style.display='none'">Cancelar</button>
+              <button class="btn btn-r" id="hf-del-btn" onclick="deleteHuella()" style="display:none">🗑️ Eliminar</button>
+            </div>
+            <div class="fmsg" id="hf-msg"></div>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <div class="tbl-toolbar"><button class="btn btn-g btn-sm" onclick="loadHuellas()">🔄 Actualizar</button></div>
+          <table><thead><tr><th>Título</th><th>Tipo</th><th>Categoría</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="huellas-tbody"><tr><td colspan="6"><div class="loading"><div class="spinner"></div></div></td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- EVENTOS -->
+      <div class="view" id="v-eventos">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.8rem">
+          <p style="font-size:.88rem;color:var(--dim)">Eventos que aparecen en la sección Eventos del sitio.</p>
+          <button class="btn btn-p btn-sm" onclick="openEventoForm()">+ Nuevo evento</button>
+        </div>
+        <div id="evento-form-wrap" style="display:none;margin-bottom:1.5rem">
+          <div class="form-card">
+            <h2 id="ef-title-h">Nuevo evento</h2>
+            <div class="fgrid">
+              <div class="fg span2"><label>Nombre *</label><input type="text" id="ef-name" placeholder="Ej: Feria de Materiales en Desuso"></div>
+              <div class="fg"><label>Fecha *</label><input type="date" id="ef-date"></div>
+              <div class="fg"><label>Hora</label><input type="text" id="ef-time" placeholder="10:00 AM"></div>
+              <div class="fg">
+                <label>Tipo</label>
+                <select id="ef-type"><option value="Feria">🎪 Feria</option><option value="Taller">🔧 Taller</option><option value="Charla">🎤 Charla</option><option value="Entrevista">🎙️ Entrevista</option><option value="Online">💻 Online</option></select>
+              </div>
+              <div class="fg">
+                <label>Estado</label>
+                <select id="ef-status"><option value="Publicado">✅ Publicado</option><option value="Borrador">📝 Borrador</option><option value="Pasado">📦 Pasado</option></select>
+              </div>
+              <div class="fg span2"><label>Ubicación</label><input type="text" id="ef-location" placeholder="Bogotá / Online"></div>
+              <div class="fg span2"><label>Descripción</label><textarea id="ef-desc" placeholder="Detalles del evento…"></textarea></div>
+              <div class="fg span2"><label>Link de registro / más info</label><input type="url" id="ef-link" placeholder="https://..."></div>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-p" onclick="saveEvento()">💾 Guardar</button>
+              <button class="btn btn-g" onclick="document.getElementById('evento-form-wrap').style.display='none'">Cancelar</button>
+              <button class="btn btn-r" id="ef-del-btn" onclick="deleteEvento()" style="display:none">🗑️ Eliminar</button>
+            </div>
+            <div class="fmsg" id="ef-msg"></div>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <div class="tbl-toolbar"><button class="btn btn-g btn-sm" onclick="loadEventos()">🔄 Actualizar</button></div>
+          <table><thead><tr><th>Evento</th><th>Fecha</th><th>Tipo</th><th>Ubicación</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="eventos-tbody"><tr><td colspan="6"><div class="loading"><div class="spinner"></div></div></td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- TEXTOS DEL SITIO -->
+      <div class="view" id="v-textos">
+        <p style="font-size:.88rem;color:var(--dim);margin-bottom:1.5rem">Edita los textos que aparecen en el sitio público. Los cambios se guardan en Notion y se reflejan en el sitio al recargar.</p>
+        <div id="textos-list"><div class="loading"><div class="spinner"></div> Cargando textos…</div></div>
+      </div>
+
+
+      <!-- CATEGORIAS -->
+      <div class="view" id="v-categorias">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.8rem">
+          <p style="font-size:.88rem;color:var(--dim)">Categorías de iniciativas. Se muestran en los filtros del sitio y se pueden asignar a cada iniciativa. Solo las activas aparecen en el sitio.</p>
+          <button class="btn btn-p btn-sm" onclick="openCatForm()">+ Nueva categoría</button>
+        </div>
+        <div id="cat-form-wrap" style="display:none;margin-bottom:1.5rem">
+          <div class="form-card" style="max-width:520px">
+            <h2 id="cf-title-h">Nueva categoría</h2>
+            <div class="fg"><label>Nombre *</label><input type="text" id="cf-name" placeholder="Ej: Construcción"></div>
+            <div class="fgrid">
+              <div class="fg"><label>Emoji</label><input type="text" id="cf-emoji" placeholder="🏗️" maxlength="4"></div>
+              <div class="fg"><label>Orden</label><input type="number" id="cf-orden" placeholder="7"></div>
+            </div>
+            <div class="fg"><label>Slug (identificador corto, sin espacios)</label><input type="text" id="cf-slug" placeholder="construccion"><div class="hint">Se usa internamente para los filtros. Solo minúsculas, sin tildes ni espacios.</div></div>
+            <div class="fg"><label style="display:flex;align-items:center;gap:.5rem;cursor:pointer"><input type="checkbox" id="cf-activo" checked style="width:auto"> Activa (visible en el sitio)</label></div>
+            <div class="form-actions">
+              <button class="btn btn-p" onclick="saveCategoria()">💾 Guardar</button>
+              <button class="btn btn-g" onclick="document.getElementById('cat-form-wrap').style.display='none'">Cancelar</button>
+              <button class="btn btn-r" id="cf-del-btn" onclick="deleteCategoria()" style="display:none">🗑️ Eliminar</button>
+            </div>
+            <div class="fmsg" id="cf-msg"></div>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <div class="tbl-toolbar"><button class="btn btn-g btn-sm" onclick="loadCategorias()">🔄 Actualizar</button></div>
+          <table><thead><tr><th>Categoría</th><th>Slug</th><th>Orden</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="categorias-tbody"><tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- REDES SOCIALES -->
+      <div class="view" id="v-redes">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.8rem">
+          <p style="font-size:.88rem;color:var(--dim)">Links de redes sociales que aparecen en el sitio y el footer.</p>
+          <button class="btn btn-p btn-sm" onclick="openRedForm()">+ Agregar red</button>
+        </div>
+        <div id="red-form-wrap" style="display:none;margin-bottom:1.5rem">
+          <div class="form-card" style="max-width:500px">
+            <h2 id="rf-title-h">Nueva red social</h2>
+            <div class="fg"><label>Nombre de la red *</label><input type="text" id="rf-name" placeholder="Instagram, YouTube, TikTok…"></div>
+            <div class="fg"><label>URL *</label><input type="url" id="rf-url" placeholder="https://instagram.com/campuscrafters"></div>
+            <div class="fg"><label>Handle / @ / texto visible</label><input type="text" id="rf-handle" placeholder="@campuscrafters"></div>
+            <div class="form-actions">
+              <button class="btn btn-p" onclick="saveRed()">💾 Guardar</button>
+              <button class="btn btn-g" onclick="document.getElementById('red-form-wrap').style.display='none'">Cancelar</button>
+              <button class="btn btn-r" id="rf-del-btn" onclick="deleteRed()" style="display:none">🗑️ Eliminar</button>
+            </div>
+            <div class="fmsg" id="rf-msg"></div>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <div class="tbl-toolbar"><button class="btn btn-g btn-sm" onclick="loadRedes()">🔄 Actualizar</button></div>
+          <table><thead><tr><th>Red</th><th>Handle</th><th>URL</th><th>Activo</th><th>Acciones</th></tr></thead>
+          <tbody id="redes-tbody"><tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- CONFIGURACIÓN -->
+      <div class="view" id="v-config">
+        <div class="notion-connect-card">
+          <h3>🔐 Seguridad</h3>
+          <div class="fg"><label>Nueva contraseña</label><input type="password" id="new-pw" placeholder="Mínimo 6 caracteres"></div>
+          <div class="fg"><label>Confirmar contraseña</label><input type="password" id="new-pw2" placeholder="Repite la contraseña"></div>
+          <button class="btn btn-p btn-sm" onclick="changePassword()">Cambiar contraseña</button>
+          <div class="fmsg" id="pw-msg" style="margin-top:.8rem"></div>
+        </div>
+        <div class="notion-connect-card">
+          <h3>🔗 Conexión con Notion</h3>
+          <p style="font-size:.85rem;color:var(--dim);margin-bottom:1rem;line-height:1.6">
+            Todos los datos se guardan en Notion y se leen desde ahí. Para que funcione en Netlify:
+          </p>
+          <ol style="font-size:.83rem;color:var(--dim);line-height:2;padding-left:1.2rem">
+            <li>Ve a <a href="https://www.notion.so/my-integrations" target="_blank" style="color:var(--leaf)">notion.so/my-integrations</a> → Crear integración → copia la key</li>
+            <li>En Netlify → Site settings → Environment variables → agrega <code>NOTION_KEY</code></li>
+            <li>En Notion, abre cada base de datos → ··· → Connections → conecta tu integración</li>
+            <li>Sube los archivos a Netlify (admin.html, whats-left.html, netlify.toml, netlify/functions/notion.js)</li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════
+var PW_KEY = 'wl_pw';
+var AUTH_KEY = 'wl_auth';
+var DEFAULT_PW = 'whats2026';
+// En Netlify, la función vive en /.netlify/functions/notion
+// En local, ajusta esta URL si usas netlify dev
+var API = '/.netlify/functions/notion';
+
+// ═══════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════
+document.getElementById('pw-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') tryLogin();
+});
+
+function tryLogin() {
+  var val = document.getElementById('pw-input').value;
+  var stored = localStorage.getItem(PW_KEY) || DEFAULT_PW;
+  if (val === stored) {
+    sessionStorage.setItem(AUTH_KEY, '1');
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  } else {
+    var err = document.getElementById('lerr');
+    err.textContent = 'Contraseña incorrecta.';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+    setTimeout(function() { err.textContent = ''; }, 3000);
+  }
+}
+
+function logout() {
+  if (!confirm('¿Cerrar sesión?')) return;
+  sessionStorage.removeItem(AUTH_KEY);
+  location.reload();
+}
+
+function changePassword() {
+  var a = document.getElementById('new-pw').value;
+  var b = document.getElementById('new-pw2').value;
+  var msg = document.getElementById('pw-msg');
+  if (a.length < 6) { showMsg(msg, 'err', 'Mínimo 6 caracteres.'); return; }
+  if (a !== b) { showMsg(msg, 'err', 'Las contraseñas no coinciden.'); return; }
+  localStorage.setItem(PW_KEY, a);
+  showMsg(msg, 'ok', '✅ Contraseña actualizada.');
+  document.getElementById('new-pw').value = '';
+  document.getElementById('new-pw2').value = '';
+}
+
+// Auto-login
+if (sessionStorage.getItem(AUTH_KEY) === '1') {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════
+// API HELPER
+// ═══════════════════════════════════════════════
+async function api(action, method, body, id) {
+  var url = API + '?action=' + action;
+  if (id) url += '&id=' + id;
+  var opts = { method: method || 'GET', headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  var res = await fetch(url, opts);
+  var data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Error de API');
+  return data;
+}
+
+// ═══════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════
+var VIEW_TITLES = {
+  dash:'Dashboard', nueva:'Nueva iniciativa', lista:'Iniciativas',
+  huellas:'Huellas / Marks', eventos:'Eventos',
+  textos:'Textos del sitio', categorias:'Categorías', redes:'Redes sociales', config:'Configuración'
+};
+
+function showView(id) {
+  document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('on'); });
+  document.querySelectorAll('.sbi').forEach(function(b) { b.classList.remove('on'); });
+  document.getElementById('v-' + id).classList.add('on');
+  document.querySelectorAll('.sbi[data-view="' + id + '"]').forEach(function(b) { b.classList.add('on'); });
+  document.getElementById('page-title').textContent = VIEW_TITLES[id] || '';
+  closeSidebar();
+  if (id === 'dash') loadDash();
+  if (id === 'lista') loadAll();
+  if (id === 'huellas') loadHuellas();
+  if (id === 'eventos') loadEventos();
+  if (id === 'textos') loadTextos();
+  if (id === 'redes') loadRedes();
+  if (id === 'categorias') loadCategorias();
+  if (id === 'nueva') resetForm();
+}
+
+document.querySelectorAll('.sbi[data-view]').forEach(function(b) {
+  b.addEventListener('click', function() { showView(this.getAttribute('data-view')); });
+});
+
+document.getElementById('ham-btn').addEventListener('click', function() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('mob-overlay').classList.add('open');
+});
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('mob-overlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════
+var CACHE = { iniciativas: null, eventos: null, huellas: null, categorias: null, redes: null };
+
+async function loadDash() {
+  var container = document.getElementById('recent-items');
+  try {
+    var inits = await api('iniciativas-all', 'GET');
+    CACHE.iniciativas = inits;
+    document.getElementById('d-total').textContent = inits.length;
+    document.getElementById('d-pub').textContent = inits.filter(function(i) { return i.status === 'Publicada'; }).length;
+    document.getElementById('d-draft').textContent = inits.filter(function(i) { return i.status === 'Borrador'; }).length;
+    document.getElementById('cnt-total').textContent = inits.length;
+
+    var events = await api('eventos-all', 'GET');
+    CACHE.eventos = events;
+    document.getElementById('d-events').textContent = events.length;
+
+    setNotionStatus(true);
+
+    var recent = inits.slice(0, 6);
+    if (!recent.length) {
+      container.innerHTML = '<div class="empty-state"><div class="big">🌱</div><p>Aún no hay iniciativas en Notion.</p></div>';
+      return;
+    }
+    container.innerHTML = recent.map(function(i) {
+      return '<div class="rl-item">' +
+        '<div class="rl-emoji">' + (i.emoji || '♻️') + '</div>' +
+        '<div class="rl-info"><div class="rl-name">' + esc(i.name) + '</div>' +
+        '<div class="rl-meta">' + (i.cat || '') + (i.city ? ' · ' + esc(i.city) : '') + '</div></div>' +
+        '<span class="badge ' + badgeClass(i.status) + '">' + (i.status || '—') + '</span>' +
+        '<button class="btn btn-g btn-xs" onclick="editIniciativa(\'' + i.id + '\')">✏️ Editar</button>' +
+        '</div>';
+    }).join('');
+  } catch(e) {
+    setNotionStatus(false);
+    container.innerHTML = '<div class="empty-state"><div class="big">⚠️</div><p>No se pudo conectar a Notion.<br><small>' + e.message + '</small><br><small style="color:var(--dim)">¿Está configurada NOTION_KEY en Netlify?</small></p></div>';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// INITIATIVES FORM
+// ═══════════════════════════════════════════════
+var editingId = null;
+var EMOJIS = ['♻️','🎨','🧴','💻','🥗','👗','🌳','🌊','💡','🔋','📱','👟','🧵','🌿','🫧','🤝','🌏','🏗️','🎭','🪴'];
+var COLORS = [
+  {bg:'linear-gradient(135deg,#2d4a1e,#4a8820)', preview:'#4a8820'},
+  {bg:'linear-gradient(135deg,#1e3a4a,#2a6a8a)', preview:'#2a6a8a'},
+  {bg:'linear-gradient(135deg,#2a1e4a,#5a3a8a)', preview:'#5a3a8a'},
+  {bg:'linear-gradient(135deg,#1e4a2a,#2a8a4a)', preview:'#2a8a4a'},
+  {bg:'linear-gradient(135deg,#4a1e3a,#8a2a6a)', preview:'#8a2a6a'},
+  {bg:'linear-gradient(135deg,#4a3a1e,#8a6a2a)', preview:'#8a6a2a'},
+  {bg:'linear-gradient(135deg,#1e4a4a,#2a8a7a)', preview:'#2a8a7a'},
+  {bg:'linear-gradient(135deg,#4a1e1e,#8a3a2a)', preview:'#8a3a2a'},
+  {bg:'linear-gradient(135deg,#1e2a4a,#2a4a8a)', preview:'#2a4a8a'},
+  {bg:'linear-gradient(135deg,#3a4a1e,#6a8a2a)', preview:'#6a8a2a'},
+];
+
+function initPickers() {
+  var eg = document.getElementById('emoji-grid');
+  if (eg.children.length) return;
+  EMOJIS.forEach(function(e, i) {
+    var d = document.createElement('div');
+    d.className = 'emoji-opt' + (i === 0 ? ' on' : '');
+    d.textContent = e;
+    d.onclick = function() {
+      document.querySelectorAll('.emoji-opt').forEach(function(x) { x.classList.remove('on'); });
+      d.classList.add('on');
+      document.getElementById('f-emoji').value = e;
+    };
+    eg.appendChild(d);
+  });
+  var cg = document.getElementById('color-grid');
+  if (cg.children.length) return;
+  COLORS.forEach(function(c, i) {
+    var d = document.createElement('div');
+    d.className = 'color-opt' + (i === 0 ? ' on' : '');
+    d.style.background = c.preview;
+    d.title = 'Color ' + (i+1);
+    d.onclick = function() {
+      document.querySelectorAll('.color-opt').forEach(function(x) { x.classList.remove('on'); });
+      d.classList.add('on');
+      document.getElementById('f-color').value = c.bg;
+    };
+    cg.appendChild(d);
+  });
+}
+
+function resetForm() {
+  editingId = null;
+  document.getElementById('form-title').textContent = '➕ Nueva iniciativa';
+  document.getElementById('btn-delete').style.display = 'none';
+  document.getElementById('fmsg').className = 'fmsg';
+  ['f-name','f-desc','f-prep','f-hours','f-country','f-city','f-email','f-phone','f-instagram','f-web','f-youtube','f-addr','f-lat','f-lng'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  var catSel = document.getElementById('f-cat-rel'); if (catSel) catSel.value = '';
+  ensureCategorias();
+  document.getElementById('f-status').value = 'Publicada';
+  document.getElementById('f-emoji').value = '♻️';
+  document.getElementById('f-color').value = COLORS[0].bg;
+  document.getElementById('geo-result').className = 'geo-result';
+  document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('on'); });
+  document.querySelectorAll('.emoji-opt').forEach(function(e, i) { e.classList.toggle('on', i === 0); });
+  document.querySelectorAll('.color-opt').forEach(function(c, i) { c.classList.toggle('on', i === 0); });
+  initPickers();
+}
+
+function editIniciativa(id) {
+  showView('nueva');
+  var all = CACHE.iniciativas || [];
+  var item = null;
+  for (var i = 0; i < all.length; i++) { if (all[i].id === id) { item = all[i]; break; } }
+  if (!item) { api('iniciativa', 'GET', null, id).then(function(i) { fillForm(i); }); return; }
+  fillForm(item);
+}
+
+function fillForm(item) {
+  editingId = item.id;
+  initPickers();
+  document.getElementById('form-title').textContent = '✏️ Editar iniciativa';
+  document.getElementById('btn-delete').style.display = 'flex';
+  var fields = {
+    'f-name': item.name, 'f-desc': item.desc, 'f-prep': item.prep,
+    'f-hours': item.hours, 'f-country': item.country, 'f-city': item.city,
+    'f-email': item.email, 'f-phone': item.phone, 'f-instagram': item.instagram,
+    'f-web': item.web, 'f-youtube': item.youtube, 'f-addr': item.address,
+    'f-lat': item.lat || '', 'f-lng': item.lng || '',
+  };
+  Object.keys(fields).forEach(function(k) {
+    var el = document.getElementById(k);
+    if (el) el.value = fields[k] || '';
+  });
+  ensureCategorias().then(function() {
+    var sel = document.getElementById('f-cat-rel');
+    if (sel) sel.value = (item.catIds && item.catIds[0]) || '';
+  });
+  document.getElementById('f-status').value = item.status || 'Borrador';
+  if (item.lat && item.lng) {
+    var r = document.getElementById('geo-result');
+    r.className = 'geo-result ok';
+    r.textContent = '✅ Lat: ' + item.lat + ' · Lng: ' + item.lng;
+  }
+  document.querySelectorAll('.chip').forEach(function(c) {
+    c.classList.toggle('on', (item.materials || []).indexOf(c.dataset.v) > -1);
+  });
+  var emoji = item.emoji || '♻️';
+  document.getElementById('f-emoji').value = emoji;
+  document.querySelectorAll('.emoji-opt').forEach(function(e) {
+    e.classList.toggle('on', e.textContent === emoji);
+  });
+  var color = item.color || COLORS[0].bg;
+  document.getElementById('f-color').value = color;
+  document.querySelectorAll('.color-opt').forEach(function(c, i) {
+    c.classList.toggle('on', COLORS[i].bg === color);
+  });
+}
+
+function collectForm(status) {
+  var name = document.getElementById('f-name').value.trim();
+  if (!name) { showMsg(document.getElementById('fmsg'), 'err', 'El nombre es obligatorio.'); return null; }
+  return {
+    name: name,
+    desc: document.getElementById('f-desc').value.trim(),
+    prep: document.getElementById('f-prep').value.trim(),
+    catIds: document.getElementById('f-cat-rel').value ? [document.getElementById('f-cat-rel').value] : [],
+    cat: (function() {
+      var sel = document.getElementById('f-cat-rel');
+      var opt = sel.options[sel.selectedIndex];
+      if (!sel.value || !opt) return '';
+      var txt = opt.textContent.trim().replace(/^[^ ]+ /, '');
+      var valid = ['Arte / Upcycling','Higiene','Tech','Comida','Ropa','Otro'];
+      return valid.indexOf(txt) > -1 ? txt : '';
+    })(),
+    status: status || document.getElementById('f-status').value,
+    hours: document.getElementById('f-hours').value.trim(),
+    country: document.getElementById('f-country').value.trim(),
+    city: document.getElementById('f-city').value.trim(),
+    email: document.getElementById('f-email').value.trim(),
+    phone: document.getElementById('f-phone').value.trim(),
+    instagram: document.getElementById('f-instagram').value.trim(),
+    web: document.getElementById('f-web').value.trim(),
+    youtube: document.getElementById('f-youtube').value.trim(),
+    address: document.getElementById('f-addr').value.trim(),
+    lat: document.getElementById('f-lat').value || null,
+    lng: document.getElementById('f-lng').value || null,
+    emoji: document.getElementById('f-emoji').value,
+    color: document.getElementById('f-color').value,
+    materials: Array.from(document.querySelectorAll('.chip.on')).map(function(c) { return c.dataset.v; }),
+  };
+}
+
+async function saveIniciativa(status) {
+  var data = collectForm(status);
+  if (!data) return;
+  var msg = document.getElementById('fmsg');
+  var btnP = document.querySelector('#v-nueva .btn-p');
+  btnP.disabled = true; btnP.textContent = 'Guardando…';
+  try {
+    if (editingId) {
+      await api('update-iniciativa', 'PATCH', data, editingId);
+    } else {
+      await api('create-iniciativa', 'POST', data);
+    }
+    CACHE.iniciativas = null;
+    showMsg(msg, 'ok', '✅ ' + (status === 'Publicada' ? 'Iniciativa publicada' : 'Borrador guardado') + ' en Notion.');
+    setTimeout(function() { showView('lista'); }, 1200);
+  } catch(e) {
+    showMsg(msg, 'err', '⚠️ Error: ' + e.message);
+  }
+  btnP.disabled = false; btnP.textContent = '✅ Publicar iniciativa';
+}
+
+async function deleteItem() {
+  if (!editingId || !confirm('¿Eliminar esta iniciativa de Notion?')) return;
+  await api('', 'DELETE', null, editingId);
+  CACHE.iniciativas = null;
+  showView('lista');
+}
+
+// ═══════════════════════════════════════════════
+// TABLE
+// ═══════════════════════════════════════════════
+var ALL_ITEMS = [];
+
+async function loadAll() {
+  var tbody = document.getElementById('tbl-body');
+  tbody.innerHTML = '<tr><td colspan="6"><div class="loading"><div class="spinner"></div> Cargando desde Notion…</div></td></tr>';
+  try {
+    ALL_ITEMS = await api('iniciativas-all', 'GET');
+    CACHE.iniciativas = ALL_ITEMS;
+    document.getElementById('cnt-total').textContent = ALL_ITEMS.length;
+    filterTable();
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="big">⚠️</div><p>' + e.message + '</p></div></td></tr>';
+  }
+}
+
+function filterTable() {
+  var q = (document.getElementById('search-q').value || '').toLowerCase();
+  var cat = document.getElementById('filter-cat').value;
+  var status = document.getElementById('filter-status').value;
+  var list = ALL_ITEMS.filter(function(i) {
+    var matchQ = !q || (i.name + ' ' + i.city + ' ' + i.country).toLowerCase().indexOf(q) > -1;
+    var matchCat = !cat || i.cat === cat;
+    var matchSt = !status || i.status === status;
+    return matchQ && matchCat && matchSt;
+  });
+  document.getElementById('tbl-count').textContent = list.length + ' resultado' + (list.length !== 1 ? 's' : '');
+  var tbody = document.getElementById('tbl-body');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="big">🔍</div><p>Sin resultados.</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(function(i) {
+    return '<tr>' +
+      '<td><div class="td-name"><div class="td-ic" style="background:' + (i.color || '#ddd') + '">' + (i.emoji || '♻️') + '</div><strong style="font-size:.88rem">' + esc(i.name) + '</strong></div></td>' +
+      '<td><span style="font-size:.82rem">' + esc(i.cat || '—') + '</span></td>' +
+      '<td><span style="font-size:.8rem;color:var(--dim)">' + esc(i.city || '—') + '</span></td>' +
+      '<td><span style="font-size:.76rem;color:var(--dim)">' + (i.materials || []).slice(0,3).join(', ') + '</span></td>' +
+      '<td><span class="badge ' + badgeClass(i.status) + '">' + (i.status || '—') + '</span></td>' +
+      '<td><div class="td-actions">' +
+      '<button class="btn btn-g btn-xs" onclick="editIniciativa(\'' + i.id + '\')">✏️</button>' +
+      '<button class="btn btn-r btn-xs" onclick="quickDelete(\'' + i.id + '\')">🗑️</button>' +
+      '</div></td></tr>';
+  }).join('');
+}
+
+async function quickDelete(id) {
+  if (!confirm('¿Eliminar?')) return;
+  await api('', 'DELETE', null, id);
+  ALL_ITEMS = ALL_ITEMS.filter(function(i) { return i.id !== id; });
+  CACHE.iniciativas = ALL_ITEMS;
+  filterTable();
+}
+
+// ═══════════════════════════════════════════════
+// GEOCODING
+// ═══════════════════════════════════════════════
+async function geocode() {
+  var addr = document.getElementById('f-addr').value.trim();
+  if (!addr) { alert('Escribe una dirección primero.'); return; }
+  var btn = document.getElementById('geo-btn');
+  var res_div = document.getElementById('geo-result');
+  btn.textContent = '⏳'; btn.disabled = true;
+  try {
+    var url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(addr) + '&limit=1';
+    var r = await fetch(url, { headers: { 'Accept-Language': 'es', 'User-Agent': 'WhatsLeft/1.0' } });
+    var data = await r.json();
+    if (!data.length) {
+      res_div.className = 'geo-result err';
+      res_div.textContent = 'No encontrado. Intenta con más detalle.';
+    } else {
+      document.getElementById('f-lat').value = data[0].lat;
+      document.getElementById('f-lng').value = data[0].lon;
+      res_div.className = 'geo-result ok';
+      res_div.textContent = '✅ ' + data[0].display_name.slice(0, 80) + ' — Lat: ' + parseFloat(data[0].lat).toFixed(5) + ' Lng: ' + parseFloat(data[0].lon).toFixed(5);
+    }
+  } catch(e) {
+    res_div.className = 'geo-result err';
+    res_div.textContent = 'Error de red.';
+  }
+  btn.textContent = '📍 Buscar'; btn.disabled = false;
+}
+
+// ═══════════════════════════════════════════════
+// HUELLAS
+// ═══════════════════════════════════════════════
+var editingHuellaId = null;
+
+function openHuellaForm(id) {
+  editingHuellaId = id || null;
+  document.getElementById('huella-form-wrap').style.display = 'block';
+  document.getElementById('hf-del-btn').style.display = id ? 'flex' : 'none';
+  document.getElementById('hf-title-h').textContent = id ? '✏️ Editar huella' : 'Nueva huella';
+  if (!id) {
+    ['hf-title','hf-desc','hf-link','hf-youtube','hf-date'].forEach(function(i) { document.getElementById(i).value = ''; });
+    document.getElementById('hf-type').value = 'Entrevista';
+    document.getElementById('hf-status').value = 'Publicado';
+    document.getElementById('hf-cat').value = 'Arte';
+  } else {
+    var h = (CACHE.huellas || []).find(function(x) { return x.id === id; });
+    if (h) {
+      document.getElementById('hf-title').value = h.title || '';
+      document.getElementById('hf-desc').value = h.desc || '';
+      document.getElementById('hf-link').value = h.link || '';
+      document.getElementById('hf-youtube').value = h.youtube || '';
+      document.getElementById('hf-date').value = h.date || '';
+      document.getElementById('hf-type').value = h.type || 'Entrevista';
+      document.getElementById('hf-status').value = h.status || 'Publicado';
+      document.getElementById('hf-cat').value = h.cat || 'Arte';
+    }
+  }
+  document.getElementById('huella-form-wrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function saveHuella() {
+  var title = document.getElementById('hf-title').value.trim();
+  if (!title) { alert('El título es obligatorio.'); return; }
+  var data = {
+    title: title,
+    desc: document.getElementById('hf-desc').value.trim(),
+    link: document.getElementById('hf-link').value.trim(),
+    youtube: document.getElementById('hf-youtube').value.trim(),
+    date: document.getElementById('hf-date').value,
+    type: document.getElementById('hf-type').value,
+    status: document.getElementById('hf-status').value,
+    cat: document.getElementById('hf-cat').value,
+  };
+  var msg = document.getElementById('hf-msg');
+  try {
+    if (editingHuellaId) await api('update-huella', 'PATCH', data, editingHuellaId);
+    else await api('create-huella', 'POST', data);
+    CACHE.huellas = null;
+    showMsg(msg, 'ok', '✅ Guardado en Notion.');
+    document.getElementById('huella-form-wrap').style.display = 'none';
+    loadHuellas();
+  } catch(e) { showMsg(msg, 'err', '⚠️ ' + e.message); }
+}
+
+async function deleteHuella() {
+  if (!editingHuellaId || !confirm('¿Eliminar?')) return;
+  await api('', 'DELETE', null, editingHuellaId);
+  CACHE.huellas = null;
+  document.getElementById('huella-form-wrap').style.display = 'none';
+  loadHuellas();
+}
+
+async function loadHuellas() {
+  var tbody = document.getElementById('huellas-tbody');
+  tbody.innerHTML = '<tr><td colspan="6"><div class="loading"><div class="spinner"></div></div></td></tr>';
+  try {
+    var list = await api('huellas-all', 'GET');
+    CACHE.huellas = list;
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="big">🎙️</div><p>Sin huellas aún.</p></div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(function(h) {
+      return '<tr>' +
+        '<td><strong style="font-size:.88rem">' + esc(h.title) + '</strong></td>' +
+        '<td>' + (h.type || '—') + '</td>' +
+        '<td>' + (h.cat || '—') + '</td>' +
+        '<td style="font-size:.78rem;color:var(--dim)">' + (h.date || '—') + '</td>' +
+        '<td><span class="badge ' + (h.status === 'Publicado' ? 'b-pub' : 'b-draft') + '">' + (h.status || '—') + '</span></td>' +
+        '<td><button class="btn btn-g btn-xs" onclick="openHuellaForm(\'' + h.id + '\')">✏️</button></td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="big">⚠️</div><p>' + e.message + '</p></div></td></tr>';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// EVENTOS
+// ═══════════════════════════════════════════════
+var editingEventoId = null;
+
+function openEventoForm(id) {
+  editingEventoId = id || null;
+  document.getElementById('evento-form-wrap').style.display = 'block';
+  document.getElementById('ef-del-btn').style.display = id ? 'flex' : 'none';
+  document.getElementById('ef-title-h').textContent = id ? '✏️ Editar evento' : 'Nuevo evento';
+  if (!id) {
+    ['ef-name','ef-date','ef-time','ef-location','ef-desc','ef-link'].forEach(function(i) { document.getElementById(i).value = ''; });
+    document.getElementById('ef-type').value = 'Feria';
+    document.getElementById('ef-status').value = 'Publicado';
+  } else {
+    var ev = (CACHE.eventos || []).find(function(x) { return x.id === id; });
+    if (ev) {
+      document.getElementById('ef-name').value = ev.name || '';
+      document.getElementById('ef-date').value = ev.date || '';
+      document.getElementById('ef-time').value = ev.time || '';
+      document.getElementById('ef-location').value = ev.location || '';
+      document.getElementById('ef-desc').value = ev.desc || '';
+      document.getElementById('ef-link').value = ev.link || '';
+      document.getElementById('ef-type').value = ev.type || 'Feria';
+      document.getElementById('ef-status').value = ev.status || 'Publicado';
+    }
+  }
+  document.getElementById('evento-form-wrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function saveEvento() {
+  var name = document.getElementById('ef-name').value.trim();
+  var date = document.getElementById('ef-date').value;
+  if (!name || !date) { alert('Nombre y fecha son obligatorios.'); return; }
+  var data = {
+    name: name, date: date,
+    time: document.getElementById('ef-time').value,
+    location: document.getElementById('ef-location').value.trim(),
+    desc: document.getElementById('ef-desc').value.trim(),
+    link: document.getElementById('ef-link').value.trim(),
+    type: document.getElementById('ef-type').value,
+    status: document.getElementById('ef-status').value,
+  };
+  var msg = document.getElementById('ef-msg');
+  try {
+    if (editingEventoId) await api('update-evento', 'PATCH', data, editingEventoId);
+    else await api('create-evento', 'POST', data);
+    CACHE.eventos = null;
+    showMsg(msg, 'ok', '✅ Guardado en Notion.');
+    document.getElementById('evento-form-wrap').style.display = 'none';
+    loadEventos();
+  } catch(e) { showMsg(msg, 'err', '⚠️ ' + e.message); }
+}
+
+async function deleteEvento() {
+  if (!editingEventoId || !confirm('¿Eliminar?')) return;
+  await api('', 'DELETE', null, editingEventoId);
+  CACHE.eventos = null;
+  document.getElementById('evento-form-wrap').style.display = 'none';
+  loadEventos();
+}
+
+async function loadEventos() {
+  var tbody = document.getElementById('eventos-tbody');
+  tbody.innerHTML = '<tr><td colspan="6"><div class="loading"><div class="spinner"></div></div></td></tr>';
+  try {
+    var list = await api('eventos-all', 'GET');
+    CACHE.eventos = list;
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="big">📅</div><p>Sin eventos aún.</p></div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(function(ev) {
+      return '<tr>' +
+        '<td><strong style="font-size:.88rem">' + esc(ev.name) + '</strong></td>' +
+        '<td style="font-size:.8rem;color:var(--dim)">' + (ev.date || '—') + '</td>' +
+        '<td>' + (ev.type || '—') + '</td>' +
+        '<td style="font-size:.8rem;color:var(--dim)">' + esc(ev.location || '—') + '</td>' +
+        '<td><span class="badge ' + (ev.status === 'Publicado' ? 'b-pub' : ev.status === 'Pasado' ? 'b-arch' : 'b-draft') + '">' + (ev.status || '—') + '</span></td>' +
+        '<td><button class="btn btn-g btn-xs" onclick="openEventoForm(\'' + ev.id + '\')">✏️</button></td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="big">⚠️</div><p>' + e.message + '</p></div></td></tr>';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// TEXTOS DEL SITIO
+// ═══════════════════════════════════════════════
+async function loadTextos() {
+  var container = document.getElementById('textos-list');
+  container.innerHTML = '<div class="loading"><div class="spinner"></div> Cargando…</div>';
+  try {
+    var list = await api('textos', 'GET');
+    container.innerHTML = list.map(function(t) {
+      return '<div class="form-card" style="max-width:820px;margin-bottom:1rem">' +
+        '<h2 style="font-size:.95rem;margin-bottom:1rem">' + esc(t.section) + '</h2>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">' +
+        '<div class="fg"><label>Texto ES</label><input type="text" id="tx-es-' + t.id + '" value="' + esc(t.textES) + '"></div>' +
+        '<div class="fg"><label>Texto EN</label><input type="text" id="tx-en-' + t.id + '" value="' + esc(t.textEN) + '"></div>' +
+        '<div class="fg"><label>Subtexto ES</label><textarea id="sx-es-' + t.id + '" style="min-height:70px">' + esc(t.subES) + '</textarea></div>' +
+        '<div class="fg"><label>Subtexto EN</label><textarea id="sx-en-' + t.id + '" style="min-height:70px">' + esc(t.subEN) + '</textarea></div>' +
+        '</div>' +
+        '<div style="margin-top:1rem"><button class="btn btn-p btn-sm" onclick="saveTexto(\'' + t.id + '\')">💾 Guardar</button></div>' +
+        '<div class="fmsg" id="tx-msg-' + t.id + '"></div>' +
+        '</div>';
+    }).join('');
+  } catch(e) {
+    container.innerHTML = '<div class="empty-state"><div class="big">⚠️</div><p>' + e.message + '</p></div>';
+  }
+}
+
+async function saveTexto(id) {
+  var data = {
+    textES: document.getElementById('tx-es-' + id).value,
+    textEN: document.getElementById('tx-en-' + id).value,
+    subES: document.getElementById('sx-es-' + id).value,
+    subEN: document.getElementById('sx-en-' + id).value,
+  };
+  var msg = document.getElementById('tx-msg-' + id);
+  try {
+    await api('update-texto', 'PATCH', data, id);
+    showMsg(msg, 'ok', '✅ Guardado en Notion. Se verá en el sitio al recargar.');
+  } catch(e) { showMsg(msg, 'err', '⚠️ ' + e.message); }
+}
+
+// ═══════════════════════════════════════════════
+// REDES SOCIALES
+// ═══════════════════════════════════════════════
+var editingRedId = null;
+
+function openRedForm(id) {
+  editingRedId = id || null;
+  document.getElementById('red-form-wrap').style.display = 'block';
+  document.getElementById('rf-del-btn').style.display = id ? 'flex' : 'none';
+  document.getElementById('rf-title-h').textContent = id ? '✏️ Editar red' : 'Nueva red social';
+  if (!id) {
+    ['rf-name','rf-url','rf-handle'].forEach(function(i) { document.getElementById(i).value = ''; });
+  } else {
+    var r = (CACHE.redes || []).find(function(x) { return x.id === id; });
+    if (r) {
+      document.getElementById('rf-name').value = r.name || '';
+      document.getElementById('rf-url').value = r.url || '';
+      document.getElementById('rf-handle').value = r.handle || '';
+    }
+  }
+}
+
+async function saveRed() {
+  var name = document.getElementById('rf-name').value.trim();
+  if (!name) { alert('El nombre es obligatorio.'); return; }
+  var data = { name: name, url: document.getElementById('rf-url').value.trim(), handle: document.getElementById('rf-handle').value.trim(), active: true };
+  var msg = document.getElementById('rf-msg');
+  try {
+    if (editingRedId) await api('update-red', 'PATCH', data, editingRedId);
+    else await api('create-red', 'POST', data);
+    CACHE.redes = null;
+    showMsg(msg, 'ok', '✅ Guardado en Notion.');
+    document.getElementById('red-form-wrap').style.display = 'none';
+    loadRedes();
+  } catch(e) { showMsg(msg, 'err', '⚠️ ' + e.message); }
+}
+
+async function deleteRed() {
+  if (!editingRedId || !confirm('¿Eliminar?')) return;
+  await api('', 'DELETE', null, editingRedId);
+  CACHE.redes = null;
+  document.getElementById('red-form-wrap').style.display = 'none';
+  loadRedes();
+}
+
+async function loadRedes() {
+  var tbody = document.getElementById('redes-tbody');
+  tbody.innerHTML = '<tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr>';
+  try {
+    var list = await api('redes', 'GET');
+    CACHE.redes = list;
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="big">📱</div><p>Sin redes aún.</p></div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(function(r) {
+      return '<tr>' +
+        '<td><strong style="font-size:.88rem">' + esc(r.name) + '</strong></td>' +
+        '<td style="font-size:.82rem;color:var(--dim)">' + esc(r.handle || '—') + '</td>' +
+        '<td><a href="' + esc(r.url) + '" target="_blank" style="font-size:.8rem;color:var(--leaf);text-decoration:none">' + esc(r.url || '—') + '</a></td>' +
+        '<td><span class="badge ' + (r.active ? 'b-pub' : 'b-arch') + '">' + (r.active ? 'Activo' : 'Inactivo') + '</span></td>' +
+        '<td><button class="btn btn-g btn-xs" onclick="openRedForm(\'' + r.id + '\')">✏️</button></td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="big">⚠️</div><p>' + e.message + '</p></div></td></tr>';
+  }
+}
+
+
+// ═══════════════════════════════════════════════
+// CATEGORIAS
+// ═══════════════════════════════════════════════
+var editingCatId = null;
+
+function slugify(s) {
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+
+function openCatForm(id) {
+  editingCatId = id || null;
+  document.getElementById('cat-form-wrap').style.display = 'block';
+  document.getElementById('cf-del-btn').style.display = id ? 'flex' : 'none';
+  document.getElementById('cf-title-h').textContent = id ? '✏️ Editar categoría' : 'Nueva categoría';
+  if (!id) {
+    ['cf-name','cf-emoji','cf-slug','cf-orden'].forEach(function(i) { document.getElementById(i).value = ''; });
+    document.getElementById('cf-activo').checked = true;
+  } else {
+    var ct = (CACHE.categorias || []).find(function(x) { return x.id === id; });
+    if (ct) {
+      document.getElementById('cf-name').value = ct.name || '';
+      document.getElementById('cf-emoji').value = ct.emoji || '';
+      document.getElementById('cf-slug').value = ct.slug || '';
+      document.getElementById('cf-orden').value = ct.orden != null ? ct.orden : '';
+      document.getElementById('cf-activo').checked = ct.activo !== false;
+    }
+  }
+  document.getElementById('cat-form-wrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function saveCategoria() {
+  var name = document.getElementById('cf-name').value.trim();
+  if (!name) { alert('El nombre es obligatorio.'); return; }
+  var slug = document.getElementById('cf-slug').value.trim() || slugify(name);
+  var data = {
+    name: name,
+    slug: slug,
+    emoji: document.getElementById('cf-emoji').value.trim(),
+    orden: document.getElementById('cf-orden').value || null,
+    activo: document.getElementById('cf-activo').checked,
+  };
+  var msg = document.getElementById('cf-msg');
+  try {
+    if (editingCatId) await api('update-categoria', 'PATCH', data, editingCatId);
+    else await api('create-categoria', 'POST', data);
+    CACHE.categorias = null;
+    showMsg(msg, 'ok', '✅ Guardado en Notion. El sitio se actualiza al recargar.');
+    document.getElementById('cat-form-wrap').style.display = 'none';
+    loadCategorias();
+  } catch(e) { showMsg(msg, 'err', '⚠️ ' + e.message); }
+}
+
+async function deleteCategoria() {
+  if (!editingCatId || !confirm('¿Eliminar esta categoría? Las iniciativas que la usan quedarán sin ella.')) return;
+  await api('', 'DELETE', null, editingCatId);
+  CACHE.categorias = null;
+  document.getElementById('cat-form-wrap').style.display = 'none';
+  loadCategorias();
+}
+
+async function loadCategorias() {
+  var tbody = document.getElementById('categorias-tbody');
+  tbody.innerHTML = '<tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr>';
+  try {
+    var list = await api('categorias', 'GET');
+    CACHE.categorias = list;
+    fillCatSelect(list);
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="big">🏷️</div><p>Sin categorías aún.</p></div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(function(ct) {
+      return '<tr>' +
+        '<td><strong style="font-size:.88rem">' + (ct.emoji||'') + ' ' + esc(ct.name) + '</strong></td>' +
+        '<td style="font-size:.8rem;color:var(--dim)">' + esc(ct.slug||'—') + '</td>' +
+        '<td style="font-size:.8rem;color:var(--dim)">' + (ct.orden != null ? ct.orden : '—') + '</td>' +
+        '<td><span class="badge ' + (ct.activo ? 'b-pub' : 'b-arch') + '">' + (ct.activo ? 'Activa' : 'Inactiva') + '</span></td>' +
+        '<td><button class="btn btn-g btn-xs" onclick="openCatForm(\'' + ct.id + '\')">✏️</button></td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="big">⚠️</div><p>' + e.message + '</p></div></td></tr>';
+  }
+}
+
+// Fill the initiative form category select with Notion categories
+function fillCatSelect(list) {
+  var sel = document.getElementById('f-cat-rel');
+  if (!sel || !list) return;
+  var current = sel.value;
+  sel.innerHTML = '<option value="">Sin categoría</option>' + list.map(function(ct) {
+    return '<option value="' + ct.id + '">' + (ct.emoji||'') + ' ' + esc(ct.name) + '</option>';
+  }).join('');
+  if (current) sel.value = current;
+}
+
+// Load categories once on app init for the select
+async function ensureCategorias() {
+  if (CACHE.categorias) { fillCatSelect(CACHE.categorias); return; }
+  try {
+    var list = await api('categorias', 'GET');
+    CACHE.categorias = list;
+    fillCatSelect(list);
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function badgeClass(s) {
+  return {Publicada:'b-pub',Borrador:'b-draft',Archivada:'b-arch'}[s] || 'b-draft';
+}
+function showMsg(el, type, msg) {
+  el.className = 'fmsg ' + type;
+  el.textContent = msg;
+  setTimeout(function() { el.className = 'fmsg'; }, 5000);
+}
+function setNotionStatus(ok) {
+  var el = document.getElementById('notion-status');
+  el.className = 'notion-status ' + (ok ? 'ok' : 'err');
+  el.textContent = ok ? '⬤ Notion conectado' : '⬤ Sin conexión a Notion';
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+function initApp() {
+  initPickers();
+  loadDash();
+  ensureCategorias();
+}
+
+if (sessionStorage.getItem(AUTH_KEY) === '1') { initApp(); }
+</script>
+</body>
+</html>
