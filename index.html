@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" data-lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What's Left — by Campus Crafters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[data-theme="light"]{--bg:#f4efe5;--bg2:#ede7d8;--bg3:#e6dfc9;--card:#e9e3d4;--text:#1c1408;--dim:rgba(28,20,8,.55);--fade:rgba(28,20,8,.3);--leaf:#4a8820;--leaf-t:rgba(74,136,32,.11);--leaf-b:rgba(74,136,32,.25);--sun:#9a7508;--clay:#8f3418;--border:rgba(28,20,8,.1);--border-h:rgba(74,136,32,.4);--nav:rgba(244,239,229,.94);--shadow:0 14px 44px rgba(0,0,0,.10);--pin-s:#fff}
+[data-theme="dark"]{--bg:#0d0c08;--bg2:#161410;--bg3:#1e1c13;--card:#1a1810;--text:#f0e8d0;--dim:rgba(240,232,208,.52);--fade:rgba(240,232,208,.28);--leaf:#78b445;--leaf-t:rgba(120,180,69,.11);--leaf-b:rgba(120,180,69,.22);--sun:#e5c445;--clay:#c05f2a;--border:rgba(240,232,208,.09);--border-h:rgba(120,180,69,.38);--nav:rgba(10,9,6,.94);--shadow:0 20px 60px rgba(0,0,0,.5);--pin-s:#0d0c08}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;transition:background .35s,color .35s}
+#cur,#curR{pointer-events:none;position:fixed;border-radius:50%;z-index:9999;top:0;left:0}
+#cur{width:9px;height:9px;background:var(--leaf)}
+#curR{width:30px;height:30px;border:1px solid var(--leaf);opacity:.38;z-index:9998;transition:all .22s}
+@media(hover:none){#cur,#curR{display:none}}
+nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:.9rem 2.5rem;background:var(--nav);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);transition:background .35s,border-color .35s}
+.brand{text-decoration:none;line-height:1.15}
+.brand-t{display:block;font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:.1em;text-transform:uppercase;color:var(--leaf)}
+.brand-s{display:block;font-size:.58rem;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{color:var(--text);text-decoration:none;font-size:.8rem;letter-spacing:.03em;opacity:.6;transition:opacity .2s,color .2s}
+.nav-links a:hover{opacity:1;color:var(--leaf)}
+.nav-r{display:flex;align-items:center;gap:.75rem}
+.ltog{display:flex;background:var(--bg3);border-radius:100px;padding:2px;border:1px solid var(--border)}
+.lbtn{padding:.24rem .58rem;border-radius:100px;border:none;background:transparent;color:var(--dim);font-family:'Syne',sans-serif;font-weight:700;font-size:.68rem;letter-spacing:.1em;cursor:pointer;transition:all .22s}
+.lbtn.on{background:var(--leaf);color:#fff}
+.ttog{width:42px;height:24px;background:var(--bg3);border-radius:100px;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;padding:3px;transition:background .3s}
+.tknob{width:16px;height:16px;border-radius:50%;background:var(--leaf);display:flex;align-items:center;justify-content:center;font-size:9px;transition:transform .28s cubic-bezier(.4,0,.2,1)}
+[data-theme="dark"] .tknob{transform:translateX(18px)}
+.ncta{background:var(--leaf);color:#fff;padding:.42rem .95rem;border-radius:2px;font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;white-space:nowrap;transition:box-shadow .2s,transform .2s}
+.ncta:hover{transform:translateY(-1px);box-shadow:0 6px 18px var(--leaf-b)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.ham span{display:block;width:20px;height:1.5px;background:var(--text);border-radius:2px}
+#mob{display:none;position:fixed;inset:0;background:var(--bg);z-index:290;flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+#mob.open{display:flex}
+#mob a{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--text);text-decoration:none}
+#mob a:hover{color:var(--leaf)}
+#mob-x{position:absolute;top:1.5rem;right:1.5rem;font-size:1.6rem;cursor:pointer;background:none;border:none;color:var(--dim)}
+.mob-ctrls{display:flex;gap:1rem;align-items:center;margin-top:.5rem}
+.modal-bg{position:fixed;inset:0;background:rgba(28,20,8,.6);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg);border:1px solid var(--border);border-radius:8px;width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.2)}
+.modal-head{padding:1.3rem 1.6rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-head h3{font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:var(--text)}
+.modal-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--dim)}
+.modal-body{padding:1.4rem 1.6rem;overflow-y:auto;flex:1}
+.modal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
+.modal-empty{text-align:center;padding:3rem;color:var(--dim);font-size:.9rem}
+.init-modal-bg{position:fixed;inset:0;background:rgba(20,15,5,.7);z-index:600;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(6px)}
+.init-modal-bg.open{display:flex}
+.init-modal{background:var(--bg);border:1px solid var(--border);border-radius:12px;width:100%;max-width:780px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.3);margin:auto;position:relative}
+.im-hero{height:260px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:5rem}
+.im-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.im-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 60%)}
+.im-close{position:absolute;top:1rem;right:1rem;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.5);border:none;color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+.im-hero-badges{position:absolute;bottom:1rem;left:1.5rem;display:flex;gap:.5rem;z-index:2}
+.im-hero-badge{background:rgba(0,0,0,.5);color:#fff;font-size:.68rem;font-weight:700;padding:.25rem .7rem;border-radius:100px;font-family:'Syne',sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.im-body{padding:2rem}
+.im-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--text);margin-bottom:.5rem;line-height:1.2}
+.im-loc{font-size:.85rem;color:var(--leaf);margin-bottom:1.2rem}
+.im-desc{font-size:.95rem;line-height:1.8;color:var(--dim);margin-bottom:1.5rem}
+.im-section{margin-bottom:1.5rem}
+.im-section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-bottom:.7rem}
+.im-prep{background:var(--leaf-t);border:1px solid var(--leaf-b);border-radius:6px;padding:1rem 1.2rem;font-size:.88rem;line-height:1.7;color:var(--text)}
+.im-chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.im-chip{background:var(--bg2);border:1px solid var(--border);border-radius:100px;padding:.25rem .75rem;font-size:.76rem;color:var(--text)}
+.im-yt-thumb{position:relative;cursor:pointer;border-radius:8px;overflow:hidden;margin-bottom:1.5rem}
+.im-yt-thumb img{width:100%;display:block;border-radius:8px}
+.im-yt-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35)}
+.im-yt-play-btn{width:64px;height:64px;background:#ff0000;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.im-yt-play-btn::after{content:'';border-left:24px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:5px}
+.im-youtube{border-radius:8px;overflow:hidden;position:relative;padding-bottom:56.25%;height:0;margin-bottom:1.5rem}
+.im-youtube iframe{position:absolute;inset:0;width:100%;height:100%}
+.im-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.im-contact-item{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:6px;text-decoration:none;color:var(--text);transition:all .2s;font-size:.85rem}
+.im-contact-item:hover{border-color:var(--border-h);transform:translateY(-2px)}
+.im-contact-ic{width:32px;height:32px;border-radius:6px;background:var(--leaf-t);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.im-contact-label{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.1rem}
+.im-contact-val{font-weight:500;color:var(--text);font-size:.85rem;word-break:break-all}
+.im-hours{display:flex;align-items:center;gap:.6rem;font-size:.88rem;color:var(--dim);padding:.7rem 1rem;background:var(--bg2);border-radius:6px;margin-bottom:1.5rem}
+.im-footer{padding:1.2rem 2rem;border-top:1px solid var(--border);background:var(--bg2);display:flex;gap:.8rem;flex-wrap:wrap;align-items:center}
+.ev-modal-bg{position:fixed;inset:0;background:rgba(20,15,5,.7);z-index:600;display:none;align-items:center;justify-content:center;padding:2rem 1rem;backdrop-filter:blur(6px)}
+.ev-modal-bg.open{display:flex}
+.ev-modal{background:var(--bg);border:1px solid var(--border);border-radius:12px;width:100%;max-width:560px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.3)}
+.ev-modal-head{padding:1.8rem 2rem 1.2rem;position:relative}
+.ev-modal-close{position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.ev-date-big{display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem}
+.ev-date-box{background:var(--leaf-t);border:1px solid var(--leaf-b);border-radius:8px;padding:.8rem 1.2rem;text-align:center;flex-shrink:0}
+.ev-date-box .day{font-family:'Syne',sans-serif;font-weight:800;font-size:2.5rem;color:var(--leaf);line-height:1}
+.ev-date-box .mon{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--leaf);opacity:.8}
+.ev-date-box .yr{font-size:.68rem;color:var(--fade);margin-top:.1rem}
+.ev-modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);line-height:1.2;margin-bottom:.4rem}
+.ev-modal-type{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);font-weight:600}
+.ev-modal-body{padding:0 2rem 1.5rem;display:flex;flex-direction:column;gap:1rem}
+.ev-info-row{display:flex;align-items:flex-start;gap:.8rem;font-size:.88rem;color:var(--dim)}
+.ev-modal-footer{padding:1.2rem 2rem;border-top:1px solid var(--border);background:var(--bg2);display:flex;gap:.8rem;flex-wrap:wrap}
+.cal-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1rem;border-radius:6px;font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;transition:all .2s;border:1px solid var(--border);color:var(--text);background:var(--card)}
+.cal-btn:hover{border-color:var(--leaf);color:var(--leaf)}
+.cal-btn.primary{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.hl-modal-bg{position:fixed;inset:0;background:rgba(20,15,5,.7);z-index:600;display:none;align-items:center;justify-content:center;padding:2rem 1rem;backdrop-filter:blur(6px)}
+.hl-modal-bg.open{display:flex}
+.hl-modal{background:var(--bg);border:1px solid var(--border);border-radius:12px;width:100%;max-width:680px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.3)}
+.hl-modal-head{padding:1.8rem 2rem 1.2rem;border-bottom:1px solid var(--border);position:relative}
+.hl-modal-close{position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.hl-type-badge{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);font-weight:700;margin-bottom:.5rem}
+.hl-modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--text);line-height:1.2}
+.hl-modal-body{padding:1.5rem 2rem}
+.hl-yt-thumb{position:relative;cursor:pointer;border-radius:8px;overflow:hidden;margin-bottom:1.2rem}
+.hl-yt-thumb img{width:100%;display:block}
+.hl-yt-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35)}
+.hl-yt-play-btn{width:56px;height:56px;background:#ff0000;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.hl-yt-play-btn::after{content:'';border-left:20px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:4px}
+.hl-yt-wrap{border-radius:8px;overflow:hidden;position:relative;padding-bottom:56.25%;height:0;margin-bottom:1.2rem}
+.hl-yt-wrap iframe{position:absolute;inset:0;width:100%;height:100%}
+.hl-modal-desc{font-size:.92rem;line-height:1.8;color:var(--dim)}
+.hl-modal-footer{padding:1rem 2rem;border-top:1px solid var(--border);background:var(--bg2);display:flex;gap:.8rem}
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:8rem 3rem 5rem;max-width:1280px;margin:0 auto}
+.hero-glow{position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse 55% 50% at 70% 25%,var(--leaf-t),transparent 65%);transition:background .35s}
+.eyebrow{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--leaf);margin-bottom:1.6rem;display:flex;align-items:center;gap:.8rem}
+.eyebrow::before{content:'';width:2rem;height:1px;background:var(--leaf)}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.8rem,4.5vw,5rem);line-height:.98;color:var(--text);margin-bottom:1.4rem}
+h1 em{font-style:normal;color:var(--leaf);display:block}
+h1 .acc{color:var(--sun)}
+.hsub{font-size:1.05rem;line-height:1.76;color:var(--dim);max-width:450px;margin-bottom:2.4rem}
+.hacts{display:flex;gap:.8rem;flex-wrap:wrap}
+.btn{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;border:none;border-radius:2px;padding:.9rem 1.8rem;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .2s,box-shadow .2s}
+.bp{background:var(--leaf);color:#fff}
+.bp:hover{transform:translateY(-2px);box-shadow:0 10px 28px var(--leaf-b)}
+.bg{background:transparent;color:var(--text);border:1px solid var(--border)}
+.bg:hover{border-color:var(--leaf);color:var(--leaf)}
+.hvis{display:flex;align-items:center;justify-content:center}
+.cwrap{width:320px;height:320px;position:relative}
+.cwrap svg{width:100%;height:100%;animation:spin 50s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.cc .ic{font-size:2.2rem;margin-bottom:.4rem}
+.cc .lb{font-family:'Syne',sans-serif;font-weight:800;font-size:.85rem;color:var(--leaf);letter-spacing:.08em;text-transform:uppercase}
+.ticker-wrap{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;position:relative;transition:background .35s}
+.ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none}
+.ticker-wrap::before{left:0;background:linear-gradient(to right,var(--bg2),transparent)}
+.ticker-wrap::after{right:0;background:linear-gradient(to left,var(--bg2),transparent)}
+.ticker{display:flex;width:max-content;animation:ticker 32s linear infinite}
+.ticker:hover{animation-play-state:paused}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-set{display:flex;align-items:center;flex-shrink:0}
+.t-item{display:flex;align-items:center;gap:.9rem;padding:1.25rem 2.8rem;flex-shrink:0;border-right:1px solid var(--border)}
+.t-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.85rem;color:var(--sun);line-height:1;white-space:nowrap}
+.t-lbl{font-size:.74rem;line-height:1.35;color:var(--dim);max-width:90px}
+.sec{padding:5.5rem 3rem;max-width:1280px;margin:0 auto}
+.secf{padding:5.5rem 0;background:var(--bg2);transition:background .35s}
+.secin{max-width:1280px;margin:0 auto;padding:0 3rem}
+.stag{font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--clay);margin-bottom:.7rem}
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.8rem,3vw,3.2rem);color:var(--text);line-height:1.08;margin-bottom:1rem}
+h2 .hl{color:var(--leaf)}
+.lead{font-size:1rem;line-height:1.8;color:var(--dim);max-width:560px;margin-bottom:3rem}
+.howg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:3rem}
+.howc{background:var(--bg);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:background .3s}
+.howc:hover{background:var(--bg3)}
+.howc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--leaf);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.howc:hover::after{transform:scaleX(1)}
+.hown{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;color:var(--leaf-t);line-height:1;margin-bottom:1rem}
+.howi{font-size:1.8rem;margin-bottom:.7rem}
+.howt{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--text);margin-bottom:.5rem}
+.howd{font-size:.87rem;line-height:1.7;color:var(--dim)}
+.catg{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin-top:2.5rem}
+.catc{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:1.6rem 1rem;text-align:center;cursor:pointer;transition:all .22s}
+.catc:hover{border-color:var(--border-h);transform:translateY(-3px);box-shadow:var(--shadow)}
+.catic{font-size:2rem;display:block;margin-bottom:.5rem}
+.catn{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--text)}
+.fbar{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.6rem 0 2.5rem}
+.fbtn{padding:.4rem .9rem;border:1px solid var(--border);background:transparent;color:var(--text);font-size:.78rem;border-radius:100px;cursor:pointer;transition:all .2s}
+.fbtn.on,.fbtn:hover{background:var(--leaf);border-color:var(--leaf);color:#fff;font-weight:600}
+.initg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:3px;overflow:hidden;transition:transform .22s,box-shadow .22s,border-color .22s;cursor:pointer}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--border-h)}
+.cimg{height:130px;display:flex;align-items:center;justify-content:center;font-size:3.2rem;position:relative;overflow:hidden}
+.cimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cbody{padding:1.3rem}
+.badges{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.7rem}
+.badge{font-size:.64rem;letter-spacing:.07em;text-transform:uppercase;padding:.22rem .55rem;border-radius:100px;font-weight:600;background:var(--leaf-t);color:var(--leaf)}
+.ct{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--text);margin-bottom:.4rem;line-height:1.3}
+.cd{font-size:.85rem;line-height:1.6;color:var(--dim);margin-bottom:1rem}
+.cft{display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;border-top:1px solid var(--border)}
+.cloc{font-size:.76rem;color:var(--fade)}
+.cloc span{color:var(--leaf)}
+.carr{width:30px;height:30px;border:1px solid var(--border-h);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;color:var(--leaf);transition:all .2s}
+.card:hover .carr{background:var(--leaf);color:#fff}
+.dir-more{text-align:center;margin-top:2rem}
+.mapwrap{margin-top:2.5rem;position:relative;border:1px solid var(--border);border-radius:8px;overflow:hidden;height:520px}
+.fwrap{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:2rem}
+.fg{margin-bottom:1.2rem}
+.fg label{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:.4rem}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:.9rem;border-radius:2px;outline:none;transition:border-color .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--leaf)}
+.fg textarea{resize:vertical;min-height:90px}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem}
+.chip{padding:.28rem .75rem;border:1px solid var(--border);border-radius:100px;font-size:.74rem;cursor:pointer;transition:all .2s;color:var(--dim)}
+.chip.on{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.fnote{font-size:.74rem;color:var(--fade);margin-top:.8rem;line-height:1.5}
+.huellas-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;margin-top:2.5rem}
+.huella-card{background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:transform .22s,box-shadow .22s;cursor:pointer}
+.huella-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.huella-img{height:180px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
+.huella-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.huella-tag{position:absolute;top:.8rem;left:.8rem;background:var(--leaf);color:#fff;font-size:.64rem;font-weight:700;padding:.2rem .6rem;border-radius:100px;font-family:'Syne',sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.huella-body{padding:1.2rem}
+.huella-type{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);margin-bottom:.4rem}
+.huella-t{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--text);margin-bottom:.4rem;line-height:1.3}
+.huella-d{font-size:.84rem;color:var(--dim);line-height:1.6}
+.eventos-g{display:flex;flex-direction:column;gap:.8rem;margin-top:2.5rem}
+.evento-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.2rem 1.5rem;display:grid;grid-template-columns:auto 1fr auto;gap:1.2rem;align-items:center;transition:border-color .2s,box-shadow .2s;cursor:pointer}
+.evento-card:hover{border-color:var(--border-h);box-shadow:var(--shadow)}
+.ev-date{text-align:center;flex-shrink:0;background:var(--leaf-t);border:1px solid var(--leaf-b);border-radius:6px;padding:.5rem .8rem;min-width:54px}
+.ev-day{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--leaf);line-height:1}
+.ev-mon{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--leaf);opacity:.7}
+.ev-t{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:.2rem}
+.ev-d{font-size:.8rem;color:var(--dim)}
+.ev-loc{font-size:.78rem;color:var(--fade);text-align:right;white-space:nowrap}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:2rem}
+.about-vis{display:flex;align-items:center;justify-content:center}
+.about-circle{width:280px;height:280px;border-radius:50%;background:var(--bg3);border:3px solid var(--border-h);display:flex;align-items:center;justify-content:center;font-size:5rem}
+.about-layers{margin-top:2rem;display:flex;flex-direction:column;gap:.9rem}
+.al{display:flex;gap:.9rem;align-items:flex-start}
+.al-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.al-t{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--text);margin-bottom:.2rem}
+.al-d{font-size:.82rem;color:var(--dim);line-height:1.5}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;margin-top:2rem}
+.contact-form input,.contact-form textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:.9rem;border-radius:4px;outline:none;transition:border-color .2s;margin-bottom:.9rem}
+.contact-form input:focus,.contact-form textarea:focus{border-color:var(--leaf)}
+.contact-form textarea{resize:vertical;min-height:100px}
+.contact-form label{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:.35rem}
+.social-links{display:flex;flex-direction:column;gap:.7rem;margin-top:1.2rem}
+.social-link{display:flex;align-items:center;gap:.9rem;padding:.9rem 1.1rem;background:var(--card);border:1px solid var(--border);border-radius:6px;text-decoration:none;color:var(--text);transition:all .22s}
+.social-link:hover{border-color:var(--border-h);transform:translateX(4px)}
+.sl-ic{width:36px;height:36px;border-radius:6px;background:var(--leaf-t);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.sl-n{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:var(--text)}
+.sl-u{font-size:.74rem;color:var(--dim)}
+.manif{padding:7rem 3rem;text-align:center;position:relative;overflow:hidden;background:var(--bg2);transition:background .35s}
+.manif::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 50% 50%,var(--leaf-t),transparent)}
+.manif blockquote{font-family:'Cormorant Garamond',serif;font-weight:600;font-style:italic;font-size:clamp(1.8rem,3.8vw,3.8rem);color:var(--text);line-height:1.22;max-width:840px;margin:0 auto 1.2rem;position:relative}
+.manif blockquote .hl{color:var(--sun);font-style:normal}
+.manif p{color:var(--dim);font-size:.9rem;position:relative}
+footer{background:var(--bg3);border-top:1px solid var(--border);padding:3.5rem 3rem;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;transition:background .35s}
+.ftb .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--leaf);margin-bottom:.5rem}
+.ftb .fsub{font-size:.62rem;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-bottom:.8rem}
+.ftb p{font-size:.83rem;color:var(--fade);line-height:1.7;max-width:230px}
+.ftcol h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text);margin-bottom:1rem}
+.ftcol ul{list-style:none}
+.ftcol ul li{margin-bottom:.5rem}
+.ftcol ul a{color:var(--dim);text-decoration:none;font-size:.83rem;transition:color .2s}
+.ftcol ul a:hover{color:var(--leaf)}
+.ftbot{background:var(--bg3);border-top:1px solid var(--border);padding:1.2rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:background .35s}
+.ftbot p,.ftbot a{font-size:.72rem;color:var(--fade);text-decoration:none}
+.ftbot a{color:var(--leaf)}
+.rev{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.rev.vis{opacity:1;transform:none}
+@media(max-width:1024px){nav{padding:.9rem 1.5rem}.nav-links{display:none}.ham{display:flex}.hero{grid-template-columns:1fr;padding:7rem 1.5rem 4rem;min-height:auto}.hvis{display:none}.sec{padding:4rem 1.5rem}.secin{padding:0 1.5rem}.secf{padding:4rem 0}.howg{grid-template-columns:1fr}.about-grid,.contact-grid,.sumar-grid{grid-template-columns:1fr !important}.about-vis{display:none}footer{grid-template-columns:1fr 1fr;gap:2rem;padding:2.5rem 1.5rem}.ftbot{padding:1rem 1.5rem;flex-direction:column;gap:.4rem;text-align:center}.manif{padding:5rem 1.5rem}}
+@media(max-width:600px){h1{font-size:2.5rem}.initg{grid-template-columns:1fr}.catg{grid-template-columns:repeat(3,1fr)}footer{grid-template-columns:1fr}.mapwrap{height:360px}.nav-r .ncta{display:none}.huellas-g{grid-template-columns:1fr}.evento-card{grid-template-columns:auto 1fr}.ev-loc{display:none}.im-contact-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="curR"></div>
+
+<!-- CATEGORY MODAL -->
+<div class="modal-bg" id="cat-modal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modal-title">Iniciativas</h3><button class="modal-close" id="modal-close-btn">&#x2715;</button></div>
+    <div class="modal-body"><div class="modal-grid" id="modal-grid"></div></div>
+  </div>
+</div>
+
+<!-- INITIATIVE MODAL -->
+<div class="init-modal-bg" id="init-modal">
+  <div class="init-modal">
+    <div class="im-hero" id="im-hero">
+      <div id="im-emoji" style="position:relative;z-index:1">&#9851;</div>
+      <div class="im-hero-overlay"></div>
+      <button class="im-close" onclick="closeInitModal()">&#x2715;</button>
+      <div class="im-hero-badges" id="im-badges"></div>
+    </div>
+    <div class="im-body">
+      <div class="im-title" id="im-title">-</div>
+      <div class="im-loc" id="im-loc">-</div>
+      <div class="im-desc" id="im-desc">-</div>
+      <div class="im-section" id="im-yt-sec" style="display:none">
+        <div class="im-section-title">Video</div>
+        <div class="im-yt-thumb" id="im-yt-thumb" onclick="playYT()">
+          <img id="im-yt-img" src="" alt="">
+          <div class="im-yt-play"><div class="im-yt-play-btn"></div></div>
+        </div>
+        <div class="im-youtube" id="im-yt-player" style="display:none"><iframe id="im-yt-iframe" src="" frameborder="0" allowfullscreen allow="autoplay"></iframe></div>
+      </div>
+      <div class="im-section" id="im-prep-sec" style="display:none">
+        <div class="im-section-title">Como preparar los materiales</div>
+        <div class="im-prep" id="im-prep">-</div>
+      </div>
+      <div class="im-section" id="im-mat-sec" style="display:none">
+        <div class="im-section-title">Materiales que reciben</div>
+        <div class="im-chips" id="im-mats"></div>
+      </div>
+      <div id="im-hours-wrap" style="display:none"><div class="im-hours">&#128336; <span id="im-hours">-</span></div></div>
+      <div class="im-section" id="im-ct-sec" style="display:none">
+        <div class="im-section-title">Contacto</div>
+        <div class="im-contact-grid" id="im-ct-grid"></div>
+      </div>
+    </div>
+    <div class="im-footer">
+      <span style="font-size:.8rem;color:var(--dim);flex:1" id="im-footer-name"></span>
+      <a id="im-maps-btn" href="#" target="_blank" class="btn bp" style="font-size:.75rem;padding:.6rem 1.2rem;display:none">Ver en Google Maps</a>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT MODAL -->
+<div class="ev-modal-bg" id="ev-modal">
+  <div class="ev-modal">
+    <div class="ev-modal-head">
+      <button class="ev-modal-close" onclick="closeEvModal()">&#x2715;</button>
+      <div class="ev-date-big">
+        <div class="ev-date-box"><div class="day" id="ev-day">-</div><div class="mon" id="ev-mon">-</div><div class="yr" id="ev-yr"></div></div>
+        <div><div class="ev-modal-type" id="ev-type">-</div><div class="ev-modal-title" id="ev-title">-</div></div>
+      </div>
+    </div>
+    <div class="ev-modal-body">
+      <div class="ev-info-row" id="ev-time-row" style="display:none"><span>&#128336;</span><span id="ev-time">-</span></div>
+      <div class="ev-info-row" id="ev-loc-row" style="display:none"><span>&#128205;</span><span id="ev-loc">-</span></div>
+      <div id="ev-desc" style="font-size:.92rem;line-height:1.8;color:var(--dim)"></div>
+    </div>
+    <div class="ev-modal-footer">
+      <a id="ev-gcal" href="#" target="_blank" class="cal-btn primary" style="display:none">&#128197; Google Calendar</a>
+      <a id="ev-ical" href="#" class="cal-btn" style="display:none">&#8595; iCal / Apple</a>
+      <a id="ev-link" href="#" target="_blank" class="cal-btn" style="display:none">Mas info</a>
+    </div>
+  </div>
+</div>
+
+<!-- HUELLA MODAL -->
+<div class="hl-modal-bg" id="hl-modal">
+  <div class="hl-modal">
+    <div class="hl-modal-head">
+      <button class="hl-modal-close" onclick="closeHlModal()">&#x2715;</button>
+      <div class="hl-type-badge" id="hl-type">-</div>
+      <div class="hl-modal-title" id="hl-title">-</div>
+    </div>
+    <div class="hl-modal-body">
+      <div id="hl-yt-sec" style="display:none">
+        <div class="hl-yt-thumb" id="hl-yt-thumb" onclick="playHlYT()">
+          <img id="hl-yt-img" src="" alt="">
+          <div class="hl-yt-play"><div class="hl-yt-play-btn"></div></div>
+        </div>
+        <div class="hl-yt-wrap" id="hl-yt-player" style="display:none"><iframe id="hl-yt-iframe" src="" frameborder="0" allowfullscreen allow="autoplay"></iframe></div>
+      </div>
+      <div class="hl-modal-desc" id="hl-desc"></div>
+    </div>
+    <div class="hl-modal-footer"><a id="hl-link" href="#" target="_blank" class="cal-btn primary" style="display:none">Ver contenido</a></div>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div id="mob">
+  <button id="mob-x">&#x2715;</button>
+  <a href="#como">Como funciona</a>
+  <a href="#dir">Directorio</a>
+  <a href="#mapa">Mapa</a>
+  <a href="#huellas">Huellas</a>
+  <a href="#eventos">Eventos</a>
+  <a href="#about">Nosotros</a>
+  <a href="#contacto">Contacto</a>
+  <a href="#sumar" style="color:var(--leaf)">Sumar iniciativa</a>
+  <div class="mob-ctrls">
+    <div class="ltog"><button class="lbtn on" id="mes" onclick="setLang('es')">ES</button><button class="lbtn" id="men" onclick="setLang('en')">EN</button></div>
+    <button class="ttog" onclick="toggleTheme()"><div class="tknob" id="mknob">&#9728;&#65039;</div></button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="brand"><span class="brand-t">What's Left</span><span class="brand-s">by Campus Crafters</span></a>
+  <ul class="nav-links">
+    <li><a href="#como">Como funciona</a></li>
+    <li><a href="#dir">Directorio</a></li>
+    <li><a href="#mapa">Mapa</a></li>
+    <li><a href="#huellas">Huellas</a></li>
+    <li><a href="#eventos">Eventos</a></li>
+    <li><a href="#about">Nosotros</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <div class="nav-r">
+    <div class="ltog"><button class="lbtn on" id="nes" onclick="setLang('es')">ES</button><button class="lbtn" id="nen" onclick="setLang('en')">EN</button></div>
+    <button class="ttog" onclick="toggleTheme()"><div class="tknob" id="nknob">&#9728;&#65039;</div></button>
+    <a href="#sumar" class="ncta">Sumar iniciativa</a>
+    <button class="ham" id="hbtn"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-glow"></div>
+<section class="hero">
+  <div>
+    <div class="eyebrow">Economia Circular - Campus Crafters</div>
+    <h1><span id="h1a">Tus sobras</span><em id="h1b">son el</em><span class="acc" id="h1c">punto de partida.</span></h1>
+    <p class="hsub" id="hero-sub">Directorio de iniciativas circulares. Encuentra donde llevar tus chanclas, plasticos, ropa y electronicos.</p>
+    <div class="hacts">
+      <a href="#mapa" class="btn bp" id="cta1">Explorar el mapa</a>
+      <a href="#sumar" class="btn bg" id="cta2">Registrar iniciativa</a>
+    </div>
+  </div>
+  <div class="hvis">
+    <div class="cwrap">
+      <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="150" cy="150" r="130" stroke="var(--leaf)" stroke-opacity=".1" stroke-width="1"/>
+        <circle cx="150" cy="150" r="100" stroke="var(--leaf)" stroke-opacity=".16" stroke-width="1" stroke-dasharray="5 4"/>
+        <circle cx="150" cy="150" r="68" stroke="var(--leaf)" stroke-opacity=".22" stroke-width="1"/>
+        <circle cx="150" cy="20" r="7" fill="var(--leaf)" opacity=".65"/>
+        <circle cx="20" cy="150" r="6" fill="var(--sun)" opacity=".65"/>
+        <circle cx="280" cy="150" r="5" fill="var(--clay)" opacity=".65"/>
+        <circle cx="150" cy="280" r="6" fill="var(--leaf)" opacity=".45"/>
+        <text x="150" y="10" text-anchor="middle" font-family="Syne" font-size="8" fill="var(--leaf)" opacity=".65" font-weight="700">MATERIAL</text>
+        <text x="8" y="155" font-family="Syne" font-size="8" fill="var(--sun)" opacity=".65" font-weight="700">MAKER</text>
+        <text x="292" y="155" text-anchor="end" font-family="Syne" font-size="8" fill="var(--clay)" opacity=".65" font-weight="700">MARK</text>
+      </svg>
+      <div class="cc"><div class="ic">&#9851;&#65039;</div><div class="lb">What's Left</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-set">
+      <div class="t-item"><div class="t-num">18</div><div class="t-lbl" id="ts1">Categorias de materiales</div></div>
+      <div class="t-item"><div class="t-num">3</div><div class="t-lbl" id="ts2">Capas del framework</div></div>
+      <div class="t-item"><div class="t-num">Global</div><div class="t-lbl" id="ts3">Vision internacional</div></div>
+      <div class="t-item"><div class="t-num">2026</div><div class="t-lbl">Campus Crafters</div></div>
+      <div class="t-item"><div class="t-num">&#9851;&#65039;</div><div class="t-lbl" id="ts4">Economia circular</div></div>
+      <div class="t-item"><div class="t-num">$0</div><div class="t-lbl" id="ts5">Costo de registro</div></div>
+      <div class="t-item"><div class="t-num">&#8734;</div><div class="t-lbl" id="ts6">Posibilidades</div></div>
+    </div>
+    <div class="ticker-set" aria-hidden="true">
+      <div class="t-item"><div class="t-num">18</div><div class="t-lbl">Categorias de materiales</div></div>
+      <div class="t-item"><div class="t-num">3</div><div class="t-lbl">Capas del framework</div></div>
+      <div class="t-item"><div class="t-num">Global</div><div class="t-lbl">Vision internacional</div></div>
+      <div class="t-item"><div class="t-num">2026</div><div class="t-lbl">Campus Crafters</div></div>
+      <div class="t-item"><div class="t-num">&#9851;&#65039;</div><div class="t-lbl">Economia circular</div></div>
+      <div class="t-item"><div class="t-num">$0</div><div class="t-lbl">Costo de registro</div></div>
+      <div class="t-item"><div class="t-num">&#8734;</div><div class="t-lbl">Posibilidades</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW -->
+<section class="sec" id="como">
+  <div class="stag">El proceso</div>
+  <h2><span id="how-h2a">Tres pasos,</span> <span class="hl" id="how-h2b">un ciclo.</span></h2>
+  <p class="lead" id="how-lead">El problema no es la basura, es no saber a donde llevarla.</p>
+  <div class="howg rev">
+    <div class="howc"><div class="hown">01</div><div class="howi">&#128230;</div><div class="howt" id="h1t">El Material</div><div class="howd" id="h1d">Identifica que tienes: chanclas, electronicos, ropa, plastico. Cada material tiene destino.</div></div>
+    <div class="howc"><div class="hown">02</div><div class="howi">&#128506;&#65039;</div><div class="howt" id="h2t">El Hacedor</div><div class="howd" id="h2d">Encuentra en el mapa quien lo recibe cerca de ti.</div></div>
+    <div class="howc"><div class="hown">03</div><div class="howi">&#127807;</div><div class="howt" id="h3t">La Huella</div><div class="howd" id="h3d">Lo que dejas atras no es basura, es legado. Arte, energia, higiene, comida.</div></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="secf" id="cat">
+  <div class="secin">
+    <div class="stag">Que tienes?</div>
+    <h2><span id="cat-h2a">18 categorias de </span><span class="hl">materiales</span></h2>
+    <p class="lead" id="cat-lead">Desde chanclas hasta paneles solares. Haz clic para ver iniciativas.</p>
+    <div class="catg rev">
+      <div class="catc" onclick="openCatModal('calzado','&#128095;')"><span class="catic">&#128095;</span><div class="catn" id="c1">Calzado</div></div>
+      <div class="catc" onclick="openCatModal('electronicos','&#128241;')"><span class="catic">&#128241;</span><div class="catn" id="c2">Electronicos</div></div>
+      <div class="catc" onclick="openCatModal('ropa','&#128295;')"><span class="catic">&#128167;</span><div class="catn" id="c3">Ropa</div></div>
+      <div class="catc" onclick="openCatModal('higiene','&#129396;')"><span class="catic">&#129396;</span><div class="catn" id="c4">Jabon / Higiene</div></div>
+      <div class="catc" onclick="openCatModal('plastico','&#9851;')"><span class="catic">&#9851;&#65039;</span><div class="catn" id="c5">Plastico</div></div>
+      <div class="catc" onclick="openCatModal('papel','&#128196;')"><span class="catic">&#128196;</span><div class="catn" id="c6">Papel</div></div>
+      <div class="catc" onclick="openCatModal('comida','&#129367;')"><span class="catic">&#129367;</span><div class="catn" id="c7">Desperdicios</div></div>
+      <div class="catc" onclick="openCatModal('baterias','&#128267;')"><span class="catic">&#128267;</span><div class="catn" id="c8">Baterias</div></div>
+      <div class="catc" onclick="openCatModal('madera','&#127795;')"><span class="catic">&#127795;</span><div class="catn" id="c9">Madera</div></div>
+      <div class="catc" onclick="openCatModal('metal','&#129371;')"><span class="catic">&#129371;</span><div class="catn" id="c10">Metal</div></div>
+      <div class="catc" onclick="openCatModal('bombillas','&#128161;')"><span class="catic">&#128161;</span><div class="catn" id="c11">Bombillas</div></div>
+      <div class="catc" onclick="openCatModal('pinturas','&#127912;')"><span class="catic">&#127912;</span><div class="catn" id="c12">Pinturas</div></div>
+      <div class="catc" onclick="openCatModal('vidrio','&#128309;')">
+        <span class="catic" style="display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 36 36" fill="none"><rect x="3" y="3" width="30" height="30" rx="3" stroke="currentColor" stroke-width="2.2" fill="none" opacity=".7"/><line x1="18" y1="3" x2="18" y2="33" stroke="currentColor" stroke-width="2" opacity=".5"/><line x1="3" y1="16" x2="33" y2="16" stroke="currentColor" stroke-width="2" opacity=".5"/></svg></span>
+        <div class="catn" id="c13">Vidrio</div>
+      </div>
+      <div class="catc" onclick="openCatModal('juguetes','&#129528;')"><span class="catic">&#129528;</span><div class="catn" id="c14">Juguetes</div></div>
+      <div class="catc" onclick="openCatModal('libros','&#128218;')"><span class="catic">&#128218;</span><div class="catn" id="c15">Libros</div></div>
+      <div class="catc" onclick="openCatModal('muebles','&#128715;&#65039;')"><span class="catic">&#128715;&#65039;</span><div class="catn" id="c16">Muebles</div></div>
+      <div class="catc" onclick="openCatModal('quimicos','&#129514;')"><span class="catic">&#129514;</span><div class="catn" id="c17">Quimicos</div></div>
+      <div class="catc" onclick="openCatModal('organicos','&#127807;')"><span class="catic">&#127807;</span><div class="catn" id="c18">Organicos</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECTORY -->
+<section class="sec" id="dir">
+  <div class="stag">Directorio</div>
+  <h2><span class="hl" id="dir-h2a">Iniciativas</span> <span id="dir-h2b">que transforman</span></h2>
+  <p class="lead" id="dir-lead">Colectivos, artistas y organizaciones que dan segunda vida a los materiales.</p>
+  <div class="fbar" id="fbar">
+    <button class="fbtn on" onclick="filterCards('all',this)" id="fa">Todas</button>
+    <button class="fbtn" onclick="filterCards('arte',this)">&#127912; Arte</button>
+    <button class="fbtn" onclick="filterCards('higiene',this)">&#129396; Higiene</button>
+    <button class="fbtn" onclick="filterCards('tech',this)">&#128187; Tech</button>
+    <button class="fbtn" onclick="filterCards('comida',this)">&#129367; Comida</button>
+    <button class="fbtn" onclick="filterCards('ropa',this)">&#128167; Ropa</button>
+  </div>
+  <div class="initg" id="grid"></div>
+  <div class="dir-more" id="dir-more" style="display:none">
+    <button class="btn bg" onclick="showAll()" id="show-all-btn">Ver todas las iniciativas</button>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="secf" id="mapa">
+  <div class="secin">
+    <div class="stag">Puntos de recoleccion</div>
+    <h2><span id="map-h2a">Encuentralos</span> <span class="hl" id="map-h2b">cerca de ti</span></h2>
+    <p class="lead" id="map-lead">Haz clic en cualquier punto para mas info.</p>
+    <div class="mapwrap rev" id="map-container" style="height:520px;border-radius:8px;overflow:hidden;border:1px solid var(--border);position:relative">
+      <iframe src="https://www.google.com/maps/d/u/1/embed?mid=1SbkOz6ogl_MLLwg8JiuN9v7j1VDgoNM&ehbc=2E312F&noprof=1" width="100%" height="100%" frameborder="0" allowfullscreen style="display:block;border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- SUBMIT FORM (Tally) -->
+<section class="sec" id="sumar">
+  <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:4rem;align-items:start" class="sumar-grid">
+    <div>
+      <div class="stag">Tienes una iniciativa?</div>
+      <h2><span class="hl" id="form-h2a">Sumate</span> <span id="form-h2b">al directorio</span></h2>
+      <p class="lead" id="form-lead">Si eres parte de un colectivo que recibe materiales y los transforma, queremos conocerte.</p>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div style="display:flex;gap:.8rem"><span>&#128203;</span><div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.2rem" id="fb1t">Revisamos cada solicitud</div><div style="font-size:.82rem;color:var(--dim)" id="fb1d">Verificamos que la iniciativa este activa antes de publicarla.</div></div></div>
+        <div style="display:flex;gap:.8rem"><span>&#127758;</span><div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.2rem" id="fb2t">Cualquier pais</div><div style="font-size:.82rem;color:var(--dim)" id="fb2d">Directorio global.</div></div></div>
+        <div style="display:flex;gap:.8rem"><span>&#9989;</span><div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.2rem" id="fb3t">Siempre gratis</div><div style="font-size:.82rem;color:var(--dim)" id="fb3d">Registrarse no tiene ningun costo.</div></div></div>
+      </div>
+    </div>
+    <div class="fwrap rev" style="padding:1rem">
+      <iframe data-tally-src="https://tally.so/embed/kdxEYe?hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0" title="Sumar iniciativa"></iframe>
+    </div>
+  </div>
+</section>
+<script async src="https://tally.so/widgets/embed.js"></script>
+
+<!-- HUELLAS -->
+<section class="secf" id="huellas">
+  <div class="secin">
+    <div class="stag">Huellas - Marks</div>
+    <h2><span class="hl">Voces</span> que quedan</h2>
+    <p class="lead">Entrevistas, reflexiones y experiencias de los hacedores detras de cada iniciativa.</p>
+    <div class="huellas-g rev" id="huellas-grid">
+      <div class="huella-card">
+        <div class="huella-img">&#127897;&#65039;<span class="huella-tag">Entrevista</span></div>
+        <div class="huella-body">
+          <div class="huella-type">The Maker - Arte</div>
+          <div class="huella-t">Cada llanta es una historia que aun no termino</div>
+          <div class="huella-d">Conversamos con Arte con Llantas sobre como nacio la idea y que significa darle una segunda vida a los materiales.</div>
+        </div>
+      </div>
+      <div class="huella-card">
+        <div class="huella-img">&#9999;&#65039;<span class="huella-tag">Reflexion</span></div>
+        <div class="huella-body">
+          <div class="huella-type">The Mark - Higiene</div>
+          <div class="huella-t">El jabon que viajo 3 paises antes de llegar a sus manos</div>
+          <div class="huella-d">Una historia sobre como los residuos de hoteles se convierten en dignidad para comunidades vulnerables.</div>
+        </div>
+      </div>
+      <div class="huella-card">
+        <div class="huella-img">&#127807;<span class="huella-tag">Experiencia</span></div>
+        <div class="huella-body">
+          <div class="huella-type">The Material - Comida</div>
+          <div class="huella-t">Lo que el compost le devuelve a la ciudad</div>
+          <div class="huella-d">Santiago lleva tres anos construyendo redes de compostaje urbano. Esto es lo que aprendieron.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTOS -->
+<section class="sec" id="eventos">
+  <div class="stag">Proximamente</div>
+  <h2>Eventos <span class="hl">circulares</span></h2>
+  <p class="lead">Ferias, talleres y encuentros donde los materiales y las personas se cruzan.</p>
+  <div class="eventos-g rev" id="eventos-grid">
+    <div class="evento-card" onclick="openEvSample(this)">
+      <div class="ev-date"><div class="ev-day">22</div><div class="ev-mon">Jun</div></div>
+      <div><div class="ev-t">Feria de Materiales en Desuso</div><div class="ev-d">Intercambio y donacion de materiales - Entrada libre</div></div>
+      <div class="ev-loc">Bogota</div>
+    </div>
+    <div class="evento-card" onclick="openEvSample(this)">
+      <div class="ev-date"><div class="ev-day">05</div><div class="ev-mon">Jul</div></div>
+      <div><div class="ev-t">Taller: Upcycling de Ropa</div><div class="ev-d">Aprende tecnicas basicas de upcycling textil</div></div>
+      <div class="ev-loc">Online</div>
+    </div>
+    <div class="evento-card" onclick="openEvSample(this)">
+      <div class="ev-date"><div class="ev-day">18</div><div class="ev-mon">Jul</div></div>
+      <div><div class="ev-t">What's Left Talks - El Material</div><div class="ev-d">Primera entrevista de la serie con iniciativas de arte circular</div></div>
+      <div class="ev-loc">YouTube Live</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="secf" id="about">
+  <div class="secin">
+    <div class="stag">Quienes somos</div>
+    <div class="about-grid">
+      <div>
+        <h2><span>Somos</span> <span class="hl">Campus Crafters</span></h2>
+        <p class="lead" id="about-desc">Una comunidad global que conecta personas, materiales y proposito. What's Left es nuestra rama de economia circular.</p>
+        <div class="about-layers">
+          <div class="al"><div class="al-dot" style="background:rgba(74,136,32,.15)">&#128230;</div><div><div class="al-t">El Material</div><div class="al-d">Cada objeto tiene una historia antes de convertirse en residuo. Nosotros la continuamos.</div></div></div>
+          <div class="al"><div class="al-dot" style="background:rgba(154,117,8,.12)">&#129309;</div><div><div class="al-t">El Hacedor</div><div class="al-d">Conectamos con personas y colectivos que transforman lo que otros descartan.</div></div></div>
+          <div class="al"><div class="al-dot" style="background:rgba(143,52,24,.1)">&#127758;</div><div><div class="al-t">La Huella</div><div class="al-d">El legado no es lo que dejamos, es lo que transformamos.</div></div></div>
+        </div>
+      </div>
+      <div class="about-vis"><div class="about-circle">&#127807;</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="sec" id="contacto">
+  <div class="stag">Hablemos</div>
+  <div class="contact-grid">
+    <div>
+      <h2><span class="hl">Contactanos</span></h2>
+      <p class="lead">Tienes una pregunta, una idea o quieres colaborar? Escribenos.</p>
+      <div class="fwrap contact-form">
+        <form onsubmit="handleContact(event)">
+          <label>Tu nombre</label><input type="text" id="ct-name" placeholder="Nombre">
+          <label>Email</label><input type="email" id="ct-email" placeholder="hola@email.com">
+          <label>Mensaje</label><textarea id="ct-msg" placeholder="Cuentanos..."></textarea>
+          <button type="submit" class="btn bp" style="width:100%;margin-top:.4rem">Enviar mensaje</button>
+          <div id="ct-st" style="margin-top:.7rem;font-size:.84rem;display:none"></div>
+        </form>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:1rem;color:var(--text)">Siguenos</h3>
+      <div class="social-links" id="social-links-container">
+        <a href="https://instagram.com/campuscrafters" target="_blank" class="social-link"><div class="sl-ic">&#128247;</div><div><div class="sl-n">Instagram</div><div class="sl-u">@campuscrafters</div></div></a>
+        <a href="https://youtube.com/@Campus.Crafters" target="_blank" class="social-link"><div class="sl-ic">&#9654;&#65039;</div><div><div class="sl-n">YouTube</div><div class="sl-u">@Campus.Crafters</div></div></a>
+        <a href="https://campuscrafters.blogspot.com" target="_blank" class="social-link"><div class="sl-ic">&#9999;&#65039;</div><div><div class="sl-n">Blog</div><div class="sl-u">campuscrafters.blogspot.com</div></div></a>
+        <a href="https://co.linkedin.com/company/campus-crafters" target="_blank" class="social-link"><div class="sl-ic">&#128188;</div><div><div class="sl-n">LinkedIn</div><div class="sl-u">Campus Crafters</div></div></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<div class="manif">
+  <blockquote>"Lo que queda no es basura, es el <span class="hl">punto de partida</span> de alguien mas."</blockquote>
+  <p>What's Left Framework - Campus Crafters - 2026</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ftb">
+    <div class="logo">What's Left</div>
+    <div class="fsub">by Campus Crafters</div>
+    <p>Una rama de Campus Crafters dedicada a conectar materiales en desuso con iniciativas que los transforman.</p>
+  </div>
+  <div class="ftcol">
+    <h4>Explorar</h4>
+    <ul>
+      <li><a href="#como">Como funciona</a></li>
+      <li><a href="#dir">Directorio</a></li>
+      <li><a href="#mapa">Mapa</a></li>
+      <li><a href="#huellas">Huellas</a></li>
+      <li><a href="#eventos">Eventos</a></li>
+    </ul>
+  </div>
+  <div class="ftcol">
+    <h4>Campus Crafters</h4>
+    <ul id="footer-redes">
+      <li><a href="https://campuscrafters.blogspot.com" target="_blank">Blog</a></li>
+      <li><a href="https://instagram.com/campuscrafters" target="_blank">Instagram</a></li>
+      <li><a href="https://youtube.com/@Campus.Crafters" target="_blank">YouTube</a></li>
+      <li><a href="https://co.linkedin.com/company/campus-crafters" target="_blank">LinkedIn</a></li>
+    </ul>
+  </div>
+  <div class="ftcol">
+    <h4>Framework</h4>
+    <ul>
+      <li><a href="#como">El Material</a></li>
+      <li><a href="#como">El Hacedor</a></li>
+      <li><a href="#huellas">La Huella</a></li>
+      <li><a href="#sumar">Registrar iniciativa</a></li>
+      <li><a href="#about">Nosotros</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="ftbot">
+  <p>2026 What's Left - Campus Crafters</p>
+  <a href="https://instagram.com/campuscrafters" target="_blank">@campuscrafters</a>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+var SAMPLE_INITS = [
+  {id:'s1',cat:'arte',name:'Arte con Llantas',desc:'Transforman llantas usadas en mobiliario urbano y esculturas.',loc:'Bogota, Colombia',ic:'&#127912;',bg:'linear-gradient(135deg,#2d4a1e,#4a8820)',tags:['Arte','Upcycling'],materials:['Calzado','Plastico']},
+  {id:'s2',cat:'higiene',name:'Jabon Circular',desc:'Recogen restos de jabon de hoteles y los reformulan para donacion.',loc:'Ciudad de Mexico, MX',ic:'&#129396;',bg:'linear-gradient(135deg,#1e3a4a,#2a6a8a)',tags:['Higiene','Social'],materials:['Jabon']},
+  {id:'s3',cat:'tech',name:'Electronica Viva',desc:'Reparan y redistribuyen electronicos desechados en zonas rurales.',loc:'Lima, Peru',ic:'&#128187;',bg:'linear-gradient(135deg,#2a1e4a,#5a3a8a)',tags:['Tech','Acceso'],materials:['Electronicos','Baterias']},
+  {id:'s4',cat:'comida',name:'Compost Urbano',desc:'Red de compostaje comunitario en espacios urbanos.',loc:'Santiago, Chile',ic:'&#127807;',bg:'linear-gradient(135deg,#1e4a2a,#2a8a4a)',tags:['Comida','Comunidad'],materials:['Comida','Organicos']},
+  {id:'s5',cat:'ropa',name:'Hilo a Hilo',desc:'Taller de upcycling textil que transforma ropa descartada.',loc:'Buenos Aires, AR',ic:'&#129525;',bg:'linear-gradient(135deg,#4a1e3a,#8a2a6a)',tags:['Ropa','Moda Circular'],materials:['Ropa']},
+  {id:'s6',cat:'arte',name:'Plastico Brillante',desc:'Convierten plastico oceanico en joyeria y arte contemporaneo.',loc:'Cartagena, Colombia',ic:'&#127754;',bg:'linear-gradient(135deg,#1e3a4a,#2a7a8a)',tags:['Arte','Plastico'],materials:['Plastico']},
+];
+
+var SAMPLE_EVENTOS = [
+  {id:'e1',name:'Feria de Materiales en Desuso',date:'2026-06-22',time:'10:00 AM',location:'Bogota',desc:'Intercambio y donacion de materiales. Entrada libre.',link:'',type:'Feria'},
+  {id:'e2',name:'Taller: Upcycling de Ropa',date:'2026-07-05',time:'2:00 PM',location:'Online',desc:'Aprende tecnicas basicas de upcycling textil. Cupos limitados.',link:'',type:'Taller'},
+  {id:'e3',name:"What's Left Talks - El Material",date:'2026-07-18',time:'6:00 PM',location:'YouTube Live',desc:'Primera entrevista de la serie con iniciativas de arte circular.',link:'',type:'Online'},
+];
+
+var notionInits = null;
+var notionCategorias = null;
+var notionEventos = null;
+var notionHuellas = null;
+var lang = 'es';
+var activeF = 'all';
+var showingAll = false;
+var LIMIT = 6;
+var currentYTUrl = '';
+var currentHlYT = '';
+
+// ============================================================
+// NOTION API
+// ============================================================
+var API = '/.netlify/functions/notion';
+var NC = {};
+
+function notionFetch(action) {
+  if (NC[action]) return Promise.resolve(NC[action]);
+  return fetch(API + '?action=' + action)
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) { if (d) NC[action] = d; return d; })
+    .catch(function() { return null; });
+}
+
+function loadAll() {
+  notionFetch('categorias-public').then(function(cats) {
+    if (cats && cats.length) {
+      notionCategorias = cats;
+      var fbar = document.getElementById('fbar');
+      if (fbar) {
+        var html = '<button class="fbtn on" onclick="filterCards(\'all\',this)" id="fa">' + (lang==='es'?'Todas':'All') + '</button>';
+        cats.forEach(function(ct) {
+          var key = ct.slug || ct.id;
+          html += '<button class="fbtn" onclick="filterCards(\'' + key + '\',this)">' + (ct.emoji||'') + ' ' + ct.name + '</button>';
+        });
+        fbar.innerHTML = html;
+      }
+      if (notionInits) renderCards();
+    }
+  });
+  notionFetch('iniciativas-public').then(function(data) {
+    if (data && data.length) {
+      notionInits = data.map(function(i) {
+        return {id:i.id, cat:mapCat(i.cat), catIds:i.catIds||[], name:i.name, desc:i.desc,
+          loc:[i.city,i.country].filter(Boolean).join(', ') || i.address || '',
+          city:i.city, country:i.country, address:i.address,
+          ic:i.emoji||'&#9851;', bg:i.color||'linear-gradient(135deg,#2d4a1e,#4a8820)',
+          tags:[], materials:i.materials||[], prep:i.prep, hours:i.hours,
+          email:i.email, phone:i.phone, instagram:i.instagram, web:i.web,
+          youtube:i.youtube, lat:i.lat, lng:i.lng};
+      });
+      renderCards(); renderPins();
+    }
+  });
+  notionFetch('eventos-public').then(function(data) {
+    if (data && data.length) {
+      notionEventos = data;
+      var grid = document.getElementById('eventos-grid');
+      var MS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      var ME = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      grid.innerHTML = data.map(function(ev) {
+        var d = ev.date ? new Date(ev.date + 'T12:00:00') : null;
+        var day = d ? d.getDate() : '-';
+        var mon = d ? (lang==='es'?MS:ME)[d.getMonth()] : '';
+        return '<div class="evento-card" onclick="openEvById(\'' + ev.id + '\')">' +
+          '<div class="ev-date"><div class="ev-day">' + day + '</div><div class="ev-mon">' + mon + '</div></div>' +
+          '<div><div class="ev-t">' + ev.name + '</div><div class="ev-d">' + (ev.desc||'') + '</div></div>' +
+          '<div class="ev-loc">' + (ev.location||'-') + '</div></div>';
+      }).join('');
+    }
+  });
+  notionFetch('huellas-public').then(function(data) {
+    if (data && data.length) {
+      notionHuellas = data;
+      var grid = document.getElementById('huellas-grid');
+      grid.innerHTML = data.map(function(h) {
+        var ytId = h.youtube ? getYTId(h.youtube) : null;
+        var imgH = ytId ? '<img src="https://img.youtube.com/vi/' + ytId + '/maxresdefault.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">' : '&#127897;&#65039;';
+        return '<div class="huella-card" onclick="openHlById(\'' + h.id + '\')">' +
+          '<div class="huella-img">' + imgH + '<span class="huella-tag">' + (h.type||'') + '</span></div>' +
+          '<div class="huella-body"><div class="huella-type">' + (h.cat||'') + '</div>' +
+          '<div class="huella-t">' + h.title + '</div>' +
+          '<div class="huella-d">' + (h.desc||'') + '</div></div></div>';
+      }).join('');
+    }
+  });
+  notionFetch('redes').then(function(data) {
+    if (!data || !data.length) return;
+    var active = data.filter(function(r) { return r.active && r.url; });
+    if (!active.length) return;
+    var ICONS = {Instagram:'&#128247;',YouTube:'&#9654;&#65039;',Blog:'&#9999;&#65039;',LinkedIn:'&#128188;',TikTok:'&#127925;',Twitter:'&#128038;'};
+    var sl = document.getElementById('social-links-container');
+    if (sl) sl.innerHTML = active.map(function(r) {
+      return '<a href="' + r.url + '" target="_blank" class="social-link">' +
+        '<div class="sl-ic">' + (ICONS[r.name]||'&#128279;') + '</div>' +
+        '<div><div class="sl-n">' + r.name + '</div><div class="sl-u">' + (r.handle||r.url) + '</div></div></a>';
+    }).join('');
+    var fr = document.getElementById('footer-redes');
+    if (fr) fr.innerHTML = active.map(function(r) {
+      return '<li><a href="' + r.url + '" target="_blank">' + r.name + '</a></li>';
+    }).join('');
+  });
+  notionFetch('textos').then(function(data) {
+    if (!data || !data.length) return;
+    var isES = lang === 'es';
+    data.forEach(function(t) {
+      var s = t.section || '';
+      if (s.indexOf('Paso 1') > -1) { var e1=document.getElementById('h1t'); if(e1) e1.textContent=isES?t.textES:t.textEN; var e1d=document.getElementById('h1d'); if(e1d) e1d.textContent=isES?t.subES:t.subEN; }
+      if (s.indexOf('Paso 2') > -1) { var e2=document.getElementById('h2t'); if(e2) e2.textContent=isES?t.textES:t.textEN; var e2d=document.getElementById('h2d'); if(e2d) e2d.textContent=isES?t.subES:t.subEN; }
+      if (s.indexOf('Paso 3') > -1) { var e3=document.getElementById('h3t'); if(e3) e3.textContent=isES?t.textES:t.textEN; var e3d=document.getElementById('h3d'); if(e3d) e3d.textContent=isES?t.subES:t.subEN; }
+      if (s.indexOf('About') > -1) { var ea=document.getElementById('about-desc'); if(ea) ea.textContent=isES?t.textES:t.textEN; }
+    });
+  });
+}
+
+function mapCat(c) {
+  var m = {'Arte / Upcycling':'arte','Higiene':'higiene','Tech':'tech','Comida':'comida','Ropa':'ropa','Otro':'otro'};
+  return m[c] || 'otro';
+}
+
+function getInits() { return notionInits || SAMPLE_INITS; }
+
+function catNamesFor(item) {
+  if (item.catIds && item.catIds.length && notionCategorias) {
+    var names = [];
+    item.catIds.forEach(function(id) {
+      notionCategorias.forEach(function(ct) { if (ct.id === id) names.push((ct.emoji?ct.emoji+' ':'') + ct.name); });
+    });
+    if (names.length) return names;
+  }
+  if (item.cat && item.cat !== 'otro') return [item.cat.charAt(0).toUpperCase() + item.cat.slice(1)];
+  return [];
+}
+
+// ============================================================
+// LANGUAGE
+// ============================================================
+var TX = {
+  es: {
+    h1a:'Tus sobras', h1b:'son el', h1c:'punto de partida.',
+    'hero-sub':'Directorio de iniciativas circulares. Encuentra donde llevar tus chanclas, plasticos, ropa y electronicos.',
+    cta1:'Explorar el mapa', cta2:'Registrar iniciativa',
+    ts1:'Categorias de materiales', ts2:'Capas del framework', ts3:'Vision internacional', ts4:'Economia circular', ts5:'Costo de registro', ts6:'Posibilidades',
+    'how-h2a':'Tres pasos,', 'how-h2b':'un ciclo.', 'how-lead':'El problema no es la basura, es no saber a donde llevarla.',
+    h1t:'El Material', h1d:'Identifica que tienes: chanclas, electronicos, ropa, plastico.',
+    h2t:'El Hacedor', h2d:'Encuentra en el mapa quien lo recibe cerca de ti.',
+    h3t:'La Huella', h3d:'Lo que dejas atras no es basura, es legado.',
+    'cat-h2a':'18 categorias de ', 'cat-lead':'Desde chanclas hasta paneles solares. Haz clic para ver iniciativas.',
+    c1:'Calzado',c2:'Electronicos',c3:'Ropa',c4:'Jabon / Higiene',c5:'Plastico',c6:'Papel',c7:'Desperdicios',c8:'Baterias',c9:'Madera',c10:'Metal',c11:'Bombillas',c12:'Pinturas',c13:'Vidrio',c14:'Juguetes',c15:'Libros',c16:'Muebles',c17:'Quimicos',c18:'Organicos',
+    'dir-h2a':'Iniciativas','dir-h2b':'que transforman','dir-lead':'Colectivos, artistas y organizaciones que dan segunda vida a los materiales.',
+    fa:'Todas',fb:'Arte',fc:'Higiene',fd:'Tech',fe:'Comida',ff:'Ropa',
+    'map-h2a':'Encuentralos','map-h2b':'cerca de ti','map-lead':'Haz clic en cualquier punto para mas info.',
+    'form-h2a':'Sumate','form-h2b':'al directorio','form-lead':'Si eres parte de un colectivo que recibe materiales y los transforma, queremos conocerte.',
+    fb1t:'Revisamos cada solicitud',fb1d:'Verificamos que la iniciativa este activa antes de publicarla.',
+    fb2t:'Cualquier pais',fb2d:'Directorio global.',fb3t:'Siempre gratis',fb3d:'Registrarse no tiene ningun costo.',
+    ff1:'Nombre *',ff2:'Ubicacion *',ff3:'Descripcion *',ff4:'Email *',ff5:'Web / Instagram',ff6:'Materiales que reciben',ff7:'Categoria',
+    fnote:'* Campos obligatorios. Nos comunicaremos en max. 5 dias habiles.',
+    fsub:'Enviar solicitud', ncta:'Sumar iniciativa', 'show-all-btn':'Ver todas las iniciativas',
+    'form-ok':'Solicitud enviada. Nos comunicaremos pronto.','ct-ok':'Mensaje enviado. Pronto te escribimos.',
+    'maps-txt':'Ver en Google Maps','gcal-txt':'Google Calendar','ical-txt':'iCal / Apple',
+  },
+  en: {
+    h1a:'Your leftovers', h1b:'are the', h1c:'starting point.',
+    'hero-sub':'A directory of circular initiatives. Find where to take your old shoes, plastics, clothes, and electronics.',
+    cta1:'Explore the map', cta2:'Register initiative',
+    ts1:'Material categories', ts2:'Framework layers', ts3:'International vision', ts4:'Circular economy', ts5:'Registration cost', ts6:'Possibilities',
+    'how-h2a':'Three steps,', 'how-h2b':'one cycle.', 'how-lead':"The problem isn't the waste, it's not knowing where to take it.",
+    h1t:'The Material', h1d:'Identify what you have: shoes, electronics, clothes, plastic.',
+    h2t:'The Maker', h2d:'Find on the map who receives it near you.',
+    h3t:'The Mark', h3d:"What you leave behind isn't trash, it's legacy.",
+    'cat-h2a':'18 categories of ', 'cat-lead':'From shoes to solar panels. Click to see initiatives.',
+    c1:'Footwear',c2:'Electronics',c3:'Clothing',c4:'Soap / Hygiene',c5:'Plastic',c6:'Paper',c7:'Food waste',c8:'Batteries',c9:'Wood',c10:'Metal',c11:'Light bulbs',c12:'Paint',c13:'Glass',c14:'Toys',c15:'Books',c16:'Furniture',c17:'Chemicals',c18:'Organics',
+    'dir-h2a':'Initiatives','dir-h2b':'that transform','dir-lead':'Collectives, artists, and organizations giving materials a second life.',
+    fa:'All',fb:'Art',fc:'Hygiene',fd:'Tech',fe:'Food',ff:'Clothing',
+    'map-h2a':'Find them','map-h2b':'near you','map-lead':'Click any point to see more info.',
+    'form-h2a':'Join','form-h2b':'the directory','form-lead':"If you're part of a collective that receives and transforms materials, we want to know you.",
+    fb1t:'We review each request',fb1d:'We verify the initiative is active before publishing.',
+    fb2t:'Any country',fb2d:'Global directory.',fb3t:'Always free',fb3d:'Registering has no cost.',
+    ff1:'Name *',ff2:'Location *',ff3:'Description *',ff4:'Email *',ff5:'Website / Instagram',ff6:'Materials you receive',ff7:'Category',
+    fnote:'* Required fields. We will contact you within 5 business days.',
+    fsub:'Send request', ncta:'Add initiative', 'show-all-btn':'See all initiatives',
+    'form-ok':'Request sent. We will be in touch soon.','ct-ok':'Message sent. We will write back soon.',
+    'maps-txt':'Open in Google Maps','gcal-txt':'Google Calendar','ical-txt':'iCal / Apple',
+  }
+};
+
+function setLang(l) {
+  lang = l;
+  document.documentElement.setAttribute('lang', l);
+  var t = TX[l];
+  Object.keys(t).forEach(function(k) { var el = document.getElementById(k); if (el) el.textContent = t[k]; });
+  var ncta = document.querySelector('.ncta'); if (ncta) ncta.textContent = t.ncta;
+  ['nes','nen','mes','men'].forEach(function(id) {
+    var el = document.getElementById(id); if (!el) return;
+    el.classList.toggle('on', (id==='nes'||id==='mes') ? l==='es' : l==='en');
+  });
+  renderCards();
+}
+
+// ============================================================
+// THEME
+// ============================================================
+function toggleTheme() {
+  var html = document.documentElement;
+  var dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  var icon = dark ? '&#9728;&#65039;' : '&#127769;';
+  ['nknob','mknob'].forEach(function(id) { var el = document.getElementById(id); if (el) el.innerHTML = icon; });
+}
+
+// ============================================================
+// CURSOR
+// ============================================================
+var cur = document.getElementById('cur'), curR = document.getElementById('curR');
+var mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+(function anim() {
+  if (cur) cur.style.transform = 'translate(' + (mx-4) + 'px,' + (my-4) + 'px)';
+  rx += (mx-rx)*.12; ry += (my-ry)*.12;
+  if (curR) curR.style.transform = 'translate(' + (rx-15) + 'px,' + (ry-15) + 'px)';
+  requestAnimationFrame(anim);
+})();
+
+// ============================================================
+// MOBILE MENU
+// ============================================================
+document.getElementById('hbtn').addEventListener('click', function() { document.getElementById('mob').classList.add('open'); });
+document.getElementById('mob-x').addEventListener('click', function() { document.getElementById('mob').classList.remove('open'); });
+document.querySelectorAll('#mob a').forEach(function(a) { a.addEventListener('click', function() { document.getElementById('mob').classList.remove('open'); }); });
+
+// ============================================================
+// CATEGORY MODAL
+// ============================================================
+function openCatModal(material, emoji) {
+  var inits = getInits();
+  var filtered = inits.filter(function(i) {
+    var mats = (i.materials||[]).join(' ').toLowerCase();
+    var catNames = catNamesFor(i).join(' ').toLowerCase();
+    var m = material.toLowerCase();
+    return mats.indexOf(m) > -1 || (i.cat||'').indexOf(m) > -1 || catNames.indexOf(m) > -1;
+  });
+  document.getElementById('modal-title').textContent = emoji + ' ' + material.charAt(0).toUpperCase() + material.slice(1);
+  var grid = document.getElementById('modal-grid');
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="modal-empty">Aun no hay iniciativas para este material. <a href="#sumar" style="color:var(--leaf)">Registra una</a></div>';
+  } else {
+    grid.innerHTML = filtered.map(function(i) {
+      return '<div class="card" onclick="closeAndOpen(\'' + i.id + '\')">' +
+        '<div class="cimg" style="background:' + i.bg + '">' + i.ic + '</div>' +
+        '<div class="cbody"><div class="badges">' + (i.tags||[]).map(function(t){return '<span class="badge">'+t+'</span>';}).join('') + '</div>' +
+        '<div class="ct">' + i.name + '</div><div class="cd">' + i.desc + '</div>' +
+        '<div class="cft"><div class="cloc"><span>&#128205;</span> ' + i.loc + '</div></div></div></div>';
+    }).join('');
+  }
+  document.getElementById('cat-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('modal-close-btn').addEventListener('click', function() {
+  document.getElementById('cat-modal').classList.remove('open');
+  document.body.style.overflow = '';
+});
+document.getElementById('cat-modal').addEventListener('click', function(e) {
+  if (e.target === this) { this.classList.remove('open'); document.body.style.overflow = ''; }
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    ['cat-modal','init-modal','ev-modal','hl-modal'].forEach(function(id) {
+      var el = document.getElementById(id); if (el) el.classList.remove('open');
+    });
+    document.body.style.overflow = '';
+  }
+});
+
+// ============================================================
+// CARDS
+// ============================================================
+function filterCards(cat, btn) {
+  activeF = cat; showingAll = false;
+  document.querySelectorAll('.fbtn').forEach(function(b) { b.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  renderCards();
+}
+
+function showAll() { showingAll = true; renderCards(); }
+
+function renderCards() {
+  var all = getInits();
+  var filtered = activeF === 'all' ? all : all.filter(function(i) {
+    if (i.cat === activeF) return true;
+    if (i.catIds && notionCategorias) {
+      for (var k = 0; k < notionCategorias.length; k++) {
+        var ct = notionCategorias[k];
+        if ((ct.slug === activeF || ct.id === activeF) && i.catIds.indexOf(ct.id) > -1) return true;
+      }
+    }
+    return false;
+  });
+  var list = showingAll ? filtered : filtered.slice(0, LIMIT);
+  var more = document.getElementById('dir-more');
+  if (more) more.style.display = (!showingAll && filtered.length > LIMIT) ? 'block' : 'none';
+  var grid = document.getElementById('grid');
+  if (!grid) return;
+  if (!list.length) {
+    grid.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--dim);grid-column:1/-1">No hay iniciativas en esta categoria aun.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(function(i) {
+    var allBadges = catNamesFor(i).concat(i.tags||[]);
+    return '<div class="card" onclick="openInitById(\'' + i.id + '\')">' +
+      '<div class="cimg" style="background:' + i.bg + '">' + i.ic + '</div>' +
+      '<div class="cbody"><div class="badges">' + allBadges.map(function(t){return '<span class="badge">'+t+'</span>';}).join('') + '</div>' +
+      '<div class="ct">' + i.name + '</div><div class="cd">' + i.desc + '</div>' +
+      '<div class="cft"><div class="cloc"><span>&#128205;</span> ' + i.loc + '</div><div class="carr">&#8594;</div></div></div></div>';
+  }).join('');
+}
+
+function renderPins() {}
+
+// ============================================================
+// INITIATIVE MODAL
+// ============================================================
+function openInitById(id) {
+  var all = getInits();
+  var item = null;
+  for (var i = 0; i < all.length; i++) { if (all[i].id === id) { item = all[i]; break; } }
+  if (!item) return;
+  var hero = document.getElementById('im-hero');
+  hero.style.background = item.bg || 'linear-gradient(135deg,#2d4a1e,#4a8820)';
+  document.getElementById('im-emoji').innerHTML = item.ic || '&#9851;';
+  hero.querySelectorAll('img.hh').forEach(function(img) { img.remove(); });
+  var heroBadges = catNamesFor(item).concat(item.tags||[]);
+  document.getElementById('im-badges').innerHTML = heroBadges.map(function(t){return '<span class="im-hero-badge">'+t+'</span>';}).join('');
+  document.getElementById('im-title').textContent = item.name || '';
+  document.getElementById('im-loc').innerHTML = '&#128205; ' + (item.loc || '');
+  document.getElementById('im-desc').textContent = item.desc || '';
+  document.getElementById('im-footer-name').textContent = item.name || '';
+  currentYTUrl = item.youtube || '';
+  var ytSec = document.getElementById('im-yt-sec');
+  if (currentYTUrl) {
+    var ytId = getYTId(currentYTUrl);
+    if (ytId) {
+      document.getElementById('im-yt-img').src = 'https://img.youtube.com/vi/' + ytId + '/maxresdefault.jpg';
+      document.getElementById('im-yt-iframe').src = '';
+      document.getElementById('im-yt-thumb').style.display = 'block';
+      document.getElementById('im-yt-player').style.display = 'none';
+      ytSec.style.display = 'block';
+    } else { ytSec.style.display = 'none'; }
+  } else { ytSec.style.display = 'none'; }
+  var prepSec = document.getElementById('im-prep-sec');
+  if (item.prep) { document.getElementById('im-prep').textContent = item.prep; prepSec.style.display = 'block'; } else { prepSec.style.display = 'none'; }
+  var matSec = document.getElementById('im-mat-sec');
+  if (item.materials && item.materials.length) {
+    document.getElementById('im-mats').innerHTML = item.materials.map(function(m){return '<span class="im-chip">'+m+'</span>';}).join('');
+    matSec.style.display = 'block';
+  } else { matSec.style.display = 'none'; }
+  var hw = document.getElementById('im-hours-wrap');
+  if (item.hours) { document.getElementById('im-hours').textContent = item.hours; hw.style.display = 'block'; } else { hw.style.display = 'none'; }
+  var contacts = [];
+  if (item.email) contacts.push({ic:'&#9993;&#65039;',label:'Email',val:item.email,href:'mailto:'+item.email});
+  if (item.phone) contacts.push({ic:'&#128242;',label:'WhatsApp',val:item.phone,href:'https://wa.me/'+item.phone.replace(/[^0-9]/g,'')});
+  if (item.instagram) contacts.push({ic:'&#128247;',label:'Instagram',val:item.instagram,href:item.instagram});
+  if (item.web) contacts.push({ic:'&#127760;',label:'Web',val:item.web,href:item.web});
+  var ctSec = document.getElementById('im-ct-sec');
+  if (contacts.length) {
+    document.getElementById('im-ct-grid').innerHTML = contacts.map(function(c) {
+      return '<a href="' + c.href + '" target="_blank" class="im-contact-item">' +
+        '<div class="im-contact-ic">' + c.ic + '</div>' +
+        '<div><span class="im-contact-label">' + c.label + '</span><span class="im-contact-val">' + c.val + '</span></div></a>';
+    }).join('');
+    ctSec.style.display = 'block';
+  } else { ctSec.style.display = 'none'; }
+  var mb = document.getElementById('im-maps-btn');
+  if (item.lat && item.lng) { mb.href = 'https://maps.google.com/?q=' + item.lat + ',' + item.lng; mb.style.display = 'inline-flex'; }
+  else if (item.address) { mb.href = 'https://maps.google.com/?q=' + encodeURIComponent(item.address); mb.style.display = 'inline-flex'; }
+  else { mb.style.display = 'none'; }
+  document.getElementById('init-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeInitModal() {
+  document.getElementById('init-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('im-yt-iframe').src = '';
+}
+document.getElementById('init-modal').addEventListener('click', function(e) { if (e.target===this) closeInitModal(); });
+
+function closeAndOpen(id) {
+  document.getElementById('cat-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(function() { openInitById(id); }, 150);
+}
+
+function playYT() {
+  var ytId = getYTId(currentYTUrl); if (!ytId) return;
+  document.getElementById('im-yt-iframe').src = 'https://www.youtube.com/embed/' + ytId + '?autoplay=1';
+  document.getElementById('im-yt-thumb').style.display = 'none';
+  document.getElementById('im-yt-player').style.display = 'block';
+}
+
+function getYTId(url) {
+  if (!url) return null;
+  var m = url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+// ============================================================
+// EVENT MODAL
+// ============================================================
+var MS_ES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+var MS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function openEvById(id) {
+  var all = notionEventos || [];
+  var ev = null;
+  for (var i = 0; i < all.length; i++) { if (all[i].id === id) { ev = all[i]; break; } }
+  if (!ev) return;
+  renderEvModal(ev);
+}
+
+function openEvSample(el) {
+  var title = el.querySelector('.ev-t') ? el.querySelector('.ev-t').textContent : '';
+  var ev = null;
+  for (var i = 0; i < SAMPLE_EVENTOS.length; i++) { if (SAMPLE_EVENTOS[i].name === title) { ev = SAMPLE_EVENTOS[i]; break; } }
+  if (!ev) return;
+  renderEvModal(ev);
+}
+
+function renderEvModal(ev) {
+  var d = ev.date ? new Date(ev.date + 'T12:00:00') : null;
+  document.getElementById('ev-day').textContent = d ? d.getDate() : '-';
+  document.getElementById('ev-mon').textContent = d ? (lang==='es'?MS_ES:MS_EN)[d.getMonth()] : '-';
+  document.getElementById('ev-yr').textContent = d ? d.getFullYear() : '';
+  document.getElementById('ev-title').textContent = ev.name || '';
+  document.getElementById('ev-type').textContent = ev.type || '';
+  document.getElementById('ev-desc').textContent = ev.desc || '';
+  var tr = document.getElementById('ev-time-row');
+  if (ev.time) { document.getElementById('ev-time').textContent = ev.time; tr.style.display = 'flex'; } else { tr.style.display = 'none'; }
+  var lr = document.getElementById('ev-loc-row');
+  if (ev.location) { document.getElementById('ev-loc').textContent = ev.location; lr.style.display = 'flex'; } else { lr.style.display = 'none'; }
+  var gcal = document.getElementById('ev-gcal');
+  var icalBtn = document.getElementById('ev-ical');
+  if (d) {
+    var start = ev.date.replace(/-/g, '');
+    var gcalUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+      '&text=' + encodeURIComponent(ev.name) +
+      '&dates=' + start + '/' + start +
+      '&details=' + encodeURIComponent(ev.desc||'') +
+      '&location=' + encodeURIComponent(ev.location||'');
+    gcal.href = gcalUrl; gcal.style.display = 'inline-flex';
+    gcal.textContent = TX[lang]['gcal-txt'] || 'Google Calendar';
+    var icalArr = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
+      'DTSTART:' + start,'DTEND:' + start,
+      'SUMMARY:' + (ev.name||''),'DESCRIPTION:' + (ev.desc||''),
+      'LOCATION:' + (ev.location||''),'END:VEVENT','END:VCALENDAR'];
+    var icalStr = icalArr.join('\r\n');
+    var blob = new Blob([icalStr], {type:'text/calendar'});
+    icalBtn.href = URL.createObjectURL(blob);
+    icalBtn.download = (ev.name||'evento') + '.ics';
+    icalBtn.style.display = 'inline-flex';
+    icalBtn.textContent = TX[lang]['ical-txt'] || 'iCal / Apple';
+  } else { gcal.style.display = 'none'; icalBtn.style.display = 'none'; }
+  var lnk = document.getElementById('ev-link');
+  if (ev.link) { lnk.href = ev.link; lnk.style.display = 'inline-flex'; } else { lnk.style.display = 'none'; }
+  document.getElementById('ev-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeEvModal() { document.getElementById('ev-modal').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('ev-modal').addEventListener('click', function(e) { if (e.target===this) closeEvModal(); });
+
+// ============================================================
+// HUELLA MODAL
+// ============================================================
+function openHlById(id) {
+  var all = notionHuellas || [];
+  var h = null;
+  for (var i = 0; i < all.length; i++) { if (all[i].id === id) { h = all[i]; break; } }
+  if (!h) return;
+  document.getElementById('hl-type').textContent = h.type || '';
+  document.getElementById('hl-title').textContent = h.title || '';
+  document.getElementById('hl-desc').textContent = h.desc || '';
+  currentHlYT = h.youtube || '';
+  var ytSec = document.getElementById('hl-yt-sec');
+  if (currentHlYT) {
+    var ytId = getYTId(currentHlYT);
+    if (ytId) {
+      document.getElementById('hl-yt-img').src = 'https://img.youtube.com/vi/' + ytId + '/maxresdefault.jpg';
+      document.getElementById('hl-yt-iframe').src = '';
+      document.getElementById('hl-yt-thumb').style.display = 'block';
+      document.getElementById('hl-yt-player').style.display = 'none';
+      ytSec.style.display = 'block';
+    } else { ytSec.style.display = 'none'; }
+  } else { ytSec.style.display = 'none'; }
+  var lnk = document.getElementById('hl-link');
+  if (h.link) { lnk.href = h.link; lnk.style.display = 'inline-flex'; } else { lnk.style.display = 'none'; }
+  document.getElementById('hl-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHlModal() {
+  document.getElementById('hl-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('hl-yt-iframe').src = '';
+}
+document.getElementById('hl-modal').addEventListener('click', function(e) { if (e.target===this) closeHlModal(); });
+
+function playHlYT() {
+  var ytId = getYTId(currentHlYT); if (!ytId) return;
+  document.getElementById('hl-yt-iframe').src = 'https://www.youtube.com/embed/' + ytId + '?autoplay=1';
+  document.getElementById('hl-yt-thumb').style.display = 'none';
+  document.getElementById('hl-yt-player').style.display = 'block';
+}
+
+// ============================================================
+// FORMS
+// ============================================================
+function handleContact(e) {
+  e.preventDefault();
+  var st = document.getElementById('ct-st');
+  st.style.cssText = 'display:block;color:var(--leaf);font-size:.84rem;margin-top:.7rem';
+  st.textContent = TX[lang]['ct-ok'];
+  setTimeout(function(){st.style.display='none';e.target.reset();},4000);
+}
+
+// ============================================================
+// SCROLL REVEAL
+// ============================================================
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, {threshold:0.1});
+document.querySelectorAll('.rev').forEach(function(el) { observer.observe(el); });
+
+// ============================================================
+// INIT
+// ============================================================
+renderCards();
+loadAll();
+</script>
+</body>
+</html>
